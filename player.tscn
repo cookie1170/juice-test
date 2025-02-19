@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://lj17m112ehpt"]
+
+[ext_resource type="Script" uid="uid://c08p2djcihe2o" path="res://player.gd" id="1_4flbx"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_sh265"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sh265"]
+radius = 24.0
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer")]
+physics_interpolation_mode = 1
+script = ExtResource("1_4flbx")
+bounce_height = 128.0
+peak_time = 0.35
+fall_time = 0.3
+bounce_peak_y_mult = 0.75
+dash_distance = 320.0
+dash_time = 0.25
+top_speed = 640.0
+hang_timer = NodePath("HangTimer")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(0, -24)
+scale = Vector2(48, 48)
+mesh = SubResource("SphereMesh_sh265")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -24)
+shape = SubResource("CircleShape2D_sh265")
+
+[node name="HangTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.05
+one_shot = true
