@@ -16,6 +16,8 @@ extends CharacterBody2D
 @export_range(0.0, 512.0, 0.5, "or_greater", "suffix:px/s") var top_speed: float = 320.0
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var acceleration_time: float = 0.15
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var deceleration_time: float = 0.15
+@export_range(0.0, 1.0, 0.05) var air_accel_mult: float = 0.5
+@export_range(0.0, 1.0, 0.05) var air_decel_mult: float = 0.5
 
 #endregion
 
@@ -23,6 +25,9 @@ extends CharacterBody2D
 
 @export_group("Nodes")
 @export var hang_timer: Timer
+@export var state_machine: StateMachine
+@export var dashing_state: State
+@export var falling_state: State
 
 #endregion
 
@@ -49,35 +54,32 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	var collision: bool = move_and_slide()
-	apply_gravity(delta)
 	handle_movement(delta)
 	handle_hang_time()
 	handle_dashing()
-	if collision:
-		if Input.is_action_pressed("bounce"):
-			jump()
 	prev_frame_vel = velocity
+	move_and_slide()
 
 
-func jump() -> void:
-	velocity.y = bounce_vel
-
-
-func apply_gravity(delta_time: float) -> void:
-	if is_on_floor() or is_dashing:
-		return
-	if velocity.y <= 0:
-		velocity.y -= bounce_grav * bounce_peak_y_mult * delta_time
-	elif velocity.y > 0:
-		velocity.y -= fall_grav * bounce_peak_y_mult * delta_time
+func apply_gravity(delta_time: float, gravity: float) -> void:
+	velocity.y -= gravity * bounce_peak_y_mult * delta_time
 
 func handle_movement(delta_time: float) -> void:
+	if state_machine.current_state == dashing_state:
+		return
 	var move_direction: float = Input.get_axis("left", "right")
 	if move_direction:
-		velocity.x = move_toward(velocity.x, top_speed * move_direction, acceleration * delta_time)
+		velocity.x = move_toward(
+				velocity.x, top_speed * move_direction,
+				acceleration * delta_time * (air_accel_mult if state_machine.current_state == falling_state
+				else 1.0)
+		)
 	else:
-		velocity.x = move_toward(velocity.x, 0, deceleration * delta_time)
+		velocity.x = move_toward(
+				velocity.x, 0.0,
+				deceleration * delta_time * (air_decel_mult if state_machine.current_state == falling_state
+				else 1.0)
+		)
 
 
 func handle_hang_time() -> void:
@@ -88,8 +90,4 @@ func handle_hang_time() -> void:
 
 func handle_dashing() -> void:
 	if Input.is_action_just_pressed("dash"):
-		dash()
-
-
-func dash() -> void:
-	pass
+		state_machine.change_state(dashing_state)

@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://lj17m112ehpt"]
+
+[ext_resource type="Script" uid="uid://c08p2djcihe2o" path="res://player/player_common.gd" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://cjt6uuke0wuwe" path="res://player/state_machine.gd" id="2_rkbax"]
+[ext_resource type="Script" uid="uid://da6voysdihkup" path="res://player/grounded.gd" id="3_yw30f"]
+[ext_resource type="Script" uid="uid://utgixymvt17f" path="res://player/bouncing.gd" id="4_g6k8r"]
+[ext_resource type="Script" uid="uid://bn2330o4e0s0p" path="res://player/falling.gd" id="5_g6k8r"]
+[ext_resource type="Script" uid="uid://c5uw1oo1cucet" path="res://player/dashing.gd" id="5_qjkh3"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_sh265"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sh265"]
+radius = 24.0
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "state_machine", "dashing_state", "falling_state")]
+physics_interpolation_mode = 1
+script = ExtResource("1_4flbx")
+bounce_height = 128.0
+peak_time = 0.35
+fall_time = 0.3
+bounce_peak_x_mult = 1.25
+bounce_peak_y_mult = 0.75
+dash_distance = 480.0
+dash_time = 0.25
+top_speed = 640.0
+air_accel_mult = 0.25
+air_decel_mult = 0.25
+hang_timer = NodePath("HangTimer")
+state_machine = NodePath("StateMachine")
+dashing_state = NodePath("StateMachine/Dashing")
+falling_state = NodePath("StateMachine/Falling")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(0, -24)
+scale = Vector2(48, 48)
+mesh = SubResource("SphereMesh_sh265")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -24)
+shape = SubResource("CircleShape2D_sh265")
+
+[node name="HangTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.05
+one_shot = true
+
+[node name="StateMachine" type="Node2D" parent="." node_paths=PackedStringArray("default_state")]
+script = ExtResource("2_rkbax")
+default_state = NodePath("Falling")
+metadata/_custom_type_script = "uid://cjt6uuke0wuwe"
+
+[node name="Grounded" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("falling_state", "bouncing_state")]
+script = ExtResource("3_yw30f")
+falling_state = NodePath("../Falling")
+bouncing_state = NodePath("../Bouncing")
+metadata/_custom_type_script = "uid://d3mvxnoga10c0"
+
+[node name="Bouncing" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("falling_state", "grounded_state")]
+script = ExtResource("4_g6k8r")
+falling_state = NodePath("../Falling")
+grounded_state = NodePath("../Grounded")
+metadata/_custom_type_script = "uid://d3mvxnoga10c0"
+
+[node name="Falling" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("grounded_state")]
+script = ExtResource("5_g6k8r")
+grounded_state = NodePath("../Grounded")
+metadata/_custom_type_script = "uid://d3mvxnoga10c0"
+
+[node name="Dashing" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("grounded_state", "falling_state")]
+script = ExtResource("5_qjkh3")
+grounded_state = NodePath("../Grounded")
+falling_state = NodePath("../Falling")
+metadata/_custom_type_script = "uid://d3mvxnoga10c0"
