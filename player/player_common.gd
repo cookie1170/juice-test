@@ -8,7 +8,6 @@ extends CharacterBody2D
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var peak_time: float = 0.25
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var fall_time: float = 0.25
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var hang_time: float = 0.1
-@export_range(1.0, 2.0, 0.05, "or_greater") var bounce_peak_x_mult: float = 1.5 
 @export_range(0.0, 1.0, 0.05) var bounce_peak_y_mult: float = 0.5
 @export_group("Dashing")
 @export_range(0.0, 512.0, 0.5, "or_greater", "suffix:px") var dash_distance: float
@@ -30,6 +29,7 @@ extends CharacterBody2D
 @export var bouncing_state: State
 @export var falling_state: State
 @export var dashing_state: State
+@export var grounded_state: State
 
 #endregion
 
@@ -50,14 +50,21 @@ var is_dashing: bool = false
 
 #endregion
 
+
 func _ready() -> void:
 	hang_timer.wait_time = hang_time
 	Ref.player = self
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("dash"):
+		if state_machine.current_state == grounded_state:
+			state_machine.change_state(bouncing_state)
+		state_machine.change_state(dashing_state)
+
+
 func _physics_process(delta: float) -> void:
 	handle_movement(delta)
-	handle_dashing()
 	move_and_slide()
 
 
@@ -72,18 +79,24 @@ func handle_movement(delta_time: float) -> void:
 		velocity.x = move_toward(
 				velocity.x, top_speed * move_direction,
 				acceleration * delta_time * (air_accel_mult if
-				state_machine.current_state == falling_state
-				or state_machine.current_state == bouncing_state
+				not state_machine.current_state == grounded_state
 				else 1.0)
 		)
 	else:
 		velocity.x = move_toward(
 				velocity.x, 0.0,
-				deceleration * delta_time * (air_decel_mult if state_machine.current_state == falling_state
+				deceleration * delta_time * (air_decel_mult if
+				not state_machine.current_state == grounded_state
 				else 1.0)
 		)
 
 
-func handle_dashing() -> void:
-	if Input.is_action_just_pressed("dash"):
-		state_machine.change_state(dashing_state)
+func get_hit(hitbox: Hitbox) -> void:
+	pass
+
+
+func on_hit(hurtbox: Hurtbox) -> void:
+	if Input.is_action_pressed("bounce"):
+		state_machine.change_state(bouncing_state)
+		velocity.y *= 1.25
+	print_debug("enemy hit")

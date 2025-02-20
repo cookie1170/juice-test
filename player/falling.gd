@@ -8,7 +8,6 @@ func enter(previous_state: State = null):
 	super()
 	if previous_state == bouncing_state:
 		hang_timer.start()
-		owner.velocity.x *= owner.bounce_peak_x_mult
 
 
 func _physics_process(delta: float) -> void:

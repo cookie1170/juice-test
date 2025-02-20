@@ -21,12 +21,11 @@ radius = 40.7922
 [sub_resource type="CircleShape2D" id="CircleShape2D_rgyib"]
 radius = 16.0
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "state_machine", "bouncing_state", "falling_state", "dashing_state")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
 physics_interpolation_mode = 1
 script = ExtResource("1_4flbx")
 peak_time = 0.45
 fall_time = 0.4
-bounce_peak_x_mult = 1.25
 bounce_peak_y_mult = 0.75
 dash_distance = 480.0
 dash_time = 0.2
@@ -38,6 +37,7 @@ state_machine = NodePath("StateMachine")
 bouncing_state = NodePath("StateMachine/Bouncing")
 falling_state = NodePath("StateMachine/Falling")
 dashing_state = NodePath("StateMachine/Dashing")
+grounded_state = NodePath("StateMachine/Grounded")
 
 [node name="Mesh" type="MeshInstance2D" parent="."]
 position = Vector2(0, -24)
@@ -97,6 +97,7 @@ state_machine = NodePath("../StateMachine")
 [node name="DashHitbox" type="Area2D" parent="."]
 script = ExtResource("8_hg6s5")
 type = 1
+detect_hits = true
 metadata/_custom_type_script = "uid://d0dcgwjybsqd6"
 
 [node name="Collider" type="CollisionShape2D" parent="DashHitbox"]

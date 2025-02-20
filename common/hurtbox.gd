@@ -4,15 +4,21 @@ extends Area2D
 @export_enum("Enemy", "Player") var type: int
 
 func _ready() -> void:
-	collision_layer = 0
-	area_entered.connect(_get_hit)
 	match type:
 		0:
+			collision_layer = 8
 			collision_mask = 4
 		1:
+			collision_layer = 16
 			collision_mask = 2
 
 
-func _get_hit(hitbox: Hitbox) -> void:
+func _physics_process(_delta: float) -> void:
+	if has_overlapping_areas():
+		for area: Hitbox in get_overlapping_areas():
+			get_hit(area)
+
+
+func get_hit(hitbox: Hitbox) -> void:
 	if owner.has_method("get_hit"):
 		owner.get_hit(hitbox)
