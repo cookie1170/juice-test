@@ -26,8 +26,9 @@ extends CharacterBody2D
 @export_group("Nodes")
 @export var hang_timer: Timer
 @export var state_machine: StateMachine
-@export var dashing_state: State
+@export var bouncing_state: State
 @export var falling_state: State
+@export var dashing_state: State
 
 #endregion
 
@@ -71,7 +72,9 @@ func handle_movement(delta_time: float) -> void:
 	if move_direction:
 		velocity.x = move_toward(
 				velocity.x, top_speed * move_direction,
-				acceleration * delta_time * (air_accel_mult if state_machine.current_state == falling_state
+				acceleration * delta_time * (air_accel_mult if
+				state_machine.current_state == falling_state
+				or state_machine.current_state == bouncing_state
 				else 1.0)
 		)
 	else:

@@ -11,11 +11,12 @@ func _ready() -> void:
 		if child is State:
 			child.state_changed.connect(change_state)
 	current_state = default_state
-	change_state(default_state)
+	default_state.enter()
 
 
 func change_state(new_state: State):
+	if new_state == current_state:
+		return
 	current_state.exit()
 	current_state = new_state
 	new_state.enter()
-	print_debug("changing state to " + new_state.name)
