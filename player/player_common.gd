@@ -1,3 +1,4 @@
+class_name Player
 extends CharacterBody2D
 
 #region exports
@@ -45,25 +46,23 @@ extends CharacterBody2D
 
 #region misc variables
 
-var prev_frame_vel: Vector2
 var is_dashing: bool = false
 
 #endregion
 
 func _ready() -> void:
 	hang_timer.wait_time = hang_time
+	Ref.player = self
 
 
 func _physics_process(delta: float) -> void:
 	handle_movement(delta)
-	handle_hang_time()
 	handle_dashing()
-	prev_frame_vel = velocity
 	move_and_slide()
 
 
 func apply_gravity(delta_time: float, gravity: float) -> void:
-	velocity.y -= gravity * bounce_peak_y_mult * delta_time
+	velocity.y -= gravity * (bounce_peak_y_mult if not hang_timer.is_stopped() else 1.0) * delta_time
 
 func handle_movement(delta_time: float) -> void:
 	if state_machine.current_state == dashing_state:
@@ -83,12 +82,6 @@ func handle_movement(delta_time: float) -> void:
 				deceleration * delta_time * (air_decel_mult if state_machine.current_state == falling_state
 				else 1.0)
 		)
-
-
-func handle_hang_time() -> void:
-	if prev_frame_vel.y < 0.0 and velocity.y > 0.0:
-		hang_timer.start()
-		velocity.x *= bounce_peak_x_mult
 
 
 func handle_dashing() -> void:

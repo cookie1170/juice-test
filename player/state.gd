@@ -9,7 +9,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 
 
-func enter() -> void:
+func enter(_previous_state: State = null) -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
 
 

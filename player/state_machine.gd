@@ -18,5 +18,5 @@ func change_state(new_state: State):
 	if new_state == current_state:
 		return
 	current_state.exit()
+	new_state.enter(current_state)
 	current_state = new_state
-	new_state.enter()

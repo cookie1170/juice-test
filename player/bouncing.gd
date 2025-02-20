@@ -3,7 +3,7 @@ extends State
 @export var falling_state: State
 @export var grounded_state: State
 
-func enter() -> void:
+func enter(_previous_state: State = null) -> void:
 	super()
 	owner.velocity.y = owner.bounce_vel
 

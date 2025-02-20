@@ -7,7 +7,7 @@ var vel_tween: Tween
 var time_tween: Tween
 var has_pressed: bool = false
 
-func enter() -> void:
+func enter(_previous_state: State = null) -> void:
 	super()
 	has_pressed = false
 	if time_tween:

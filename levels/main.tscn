@@ -4,10 +4,10 @@
 [ext_resource type="Script" uid="uid://bo2dj1yk8lfa" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_5k4jt"]
 [ext_resource type="Script" uid="uid://ckjqglobgtbtn" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="3_qy63d"]
 [ext_resource type="Script" uid="uid://dvq8lfxsyc554" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_6et1j"]
-[ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="5_etqu2"]
+[ext_resource type="PackedScene" uid="uid://517hm5oeryf5" path="res://enemies/basic_enemy/basic_enemy.tscn" id="5_ifaiv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
-size = Vector2(1152, 64)
+size = Vector2(3200, 64)
 
 [sub_resource type="Resource" id="Resource_272bh"]
 script = ExtResource("4_6et1j")
@@ -21,7 +21,7 @@ ease = 2
 
 [node name="FloorPolygon" type="Polygon2D" parent="Floor"]
 color = Color(0.662452, 0.662452, 0.662452, 1)
-polygon = PackedVector2Array(576, 0, 576, 64, -576, 64, -576, 0)
+polygon = PackedVector2Array(1600, 0, 1600, 64, -1600, 64, -1600, 0)
 
 [node name="Collider" type="CollisionShape2D" parent="Floor"]
 visible = false
@@ -56,6 +56,5 @@ dead_zone_width = 0.2
 dead_zone_height = 0.4
 metadata/_custom_type_script = "uid://ckjqglobgtbtn"
 
-[node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(-216, -112)
-texture = ExtResource("5_etqu2")
+[node name="BasicEnemy" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(512, 0)
