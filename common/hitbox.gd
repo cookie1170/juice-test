@@ -19,7 +19,9 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
+	if not monitoring:
+		return
 	if has_overlapping_areas():
 		for area: Hurtbox in get_overlapping_areas():
-			if owner.has_method("on_hit"):
+			if owner.has_method("on_hit") and area.i_frame_timer.is_stopped():
 				owner.on_hit(area)

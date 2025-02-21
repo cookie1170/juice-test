@@ -29,7 +29,10 @@ extends CharacterBody2D
 @export_group("Nodes")
 @export var hang_timer: Timer
 @export var offset_timer: Timer
+@export var dash_attack_timer: Timer
 @export var mesh: MeshInstance2D
+@export var dash_hitbox: Hitbox
+@export var hurtbox: Hurtbox
 @export var state_machine: StateMachine
 @export var bouncing_state: State
 @export var falling_state: State
@@ -75,6 +78,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _physics_process(delta: float) -> void:
 	handle_movement(delta)
 	handle_cam_offset()
+	handle_dash_attack()
 	move_and_slide()
 
 
@@ -112,6 +116,11 @@ func handle_cam_offset() -> void:
 		final_offset.x = 0.0
 	cam_offset_tween.tween_method(phantom_camera.set_follow_offset, \
 	phantom_camera.get_follow_offset(), final_offset, offset_time)
+
+
+func handle_dash_attack() -> void:
+	dash_hitbox.monitorable = not dash_attack_timer.is_stopped()
+	dash_hitbox.monitoring = not dash_attack_timer.is_stopped()
 
 
 func get_hit(_hitbox: Hitbox) -> void:

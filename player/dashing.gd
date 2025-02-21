@@ -7,6 +7,7 @@ extends State
 var vel_tween: Tween
 var time_tween: Tween
 var has_pressed: bool = false
+var points: PackedVector2Array
 
 func enter(_previous_state: State = null) -> void:
 	super()
@@ -41,6 +42,8 @@ func _physics_process(delta: float) -> void:
 func dash() -> void:
 	dash_indicator.hide()
 	has_pressed = true
+	owner.dash_attack_timer.start()
+	owner.hurtbox.i_frame_timer.start(1.0)
 	if time_tween:
 		time_tween.kill()
 	time_tween = get_tree().create_tween()
