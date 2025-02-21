@@ -121,6 +121,7 @@ dash_indicator = NodePath("../../DashDirIndicator")
 metadata/_custom_type_script = "uid://d3mvxnoga10c0"
 
 [node name="StateLabel" type="Label" parent="." node_paths=PackedStringArray("state_machine")]
+visible = false
 offset_left = -524.5
 offset_top = -152.0
 offset_right = 524.5
