@@ -60,6 +60,7 @@ var is_dashing: bool = false
 var cam_offset_tween: Tween
 var final_offset: Vector2
 var is_cam_tweening: bool
+var move_direction: float
 
 #endregion
 
@@ -90,8 +91,9 @@ func apply_gravity(delta_time: float, gravity: float) -> void:
 
 func handle_movement(delta_time: float) -> void:
 	if state_machine.current_state == dashing_state:
+		move_direction = signf(velocity.x)
 		return
-	var move_direction: float = Input.get_axis("left", "right")
+	move_direction = Input.get_axis("left", "right")
 	if move_direction:
 		velocity.x = move_toward(
 				velocity.x, top_speed * move_direction,
@@ -112,8 +114,12 @@ func handle_cam_offset() -> void:
 	if cam_offset_tween:
 		cam_offset_tween.kill()
 	cam_offset_tween = get_tree().create_tween()
-	if offset_timer.is_stopped() and not velocity.x == 0.0:
-		offset_timer.start()
+	if (not velocity.x == 0.0 and not
+	final_offset.x == move_direction * offset_amount.x):
+		if offset_timer.is_stopped(): 
+			offset_timer.start()
+	else:
+		offset_timer.stop()
 	if velocity.x == 0.0:
 		offset_timer.stop()
 		final_offset.x = 0.0
@@ -126,12 +132,20 @@ func handle_cam_offset() -> void:
 
 
 func handle_dash_attack() -> void:
+	if state_machine.current_state == grounded_state:
+		dash_attack_timer.stop()
 	dash_hitbox.monitorable = not dash_attack_timer.is_stopped()
 	dash_hitbox.monitoring = not dash_attack_timer.is_stopped()
 
 
-func get_hit(_hitbox: Hitbox) -> void:
-	pass
+func get_hit(hitbox: Hitbox) -> void:
+	velocity = -global_position.direction_to(hitbox.global_position) * 1024
+	if is_on_floor():
+		state_machine.change_state(bouncing_state)
+	var time_tween: Tween = get_tree().create_tween().set_ignore_time_scale()
+	time_tween.tween_property(Engine, "time_scale", 0.1, 0.1)
+	time_tween.tween_property(Engine, "time_scale", 1.0, 0.75)
+	print_debug("player hit")
 
 
 func on_hit(_hurtbox: Hurtbox) -> void:
@@ -142,4 +156,4 @@ func on_hit(_hurtbox: Hurtbox) -> void:
 
 
 func _on_offset_timeout() -> void:
-	final_offset.x = signf(velocity.x) * offset_amount.x
+	final_offset.x = move_direction * offset_amount.x

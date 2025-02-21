@@ -61,6 +61,15 @@ metadata/_custom_type_script = "uid://ckjqglobgtbtn"
 [node name="BasicEnemy" parent="." instance=ExtResource("5_ifaiv")]
 position = Vector2(512, 0)
 
+[node name="BasicEnemy2" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(832, 0)
+
+[node name="BasicEnemy3" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(1152, 0)
+
+[node name="BasicEnemy4" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(192, 0)
+
 [node name="Icon" type="Sprite2D" parent="."]
 position = Vector2(688, -264)
 texture = ExtResource("6_5k4jt")

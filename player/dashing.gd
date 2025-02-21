@@ -66,5 +66,5 @@ func get_dash_vel_mult() -> float:
 	var max_dist: float = dash_indicator.max_dist
 	var clamp_dist: float = clampf(owner.mesh.global_position. \
 	distance_to(get_global_mouse_position()), 0, max_dist)
-	var remapped_dist: float = remap(clamp_dist, 0.0, max_dist, 0.0, 1.0)
+	var remapped_dist: float = remap(clamp_dist, 0.0, max_dist, 0.5, 1.0)
 	return remapped_dist
