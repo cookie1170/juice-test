@@ -25,6 +25,7 @@ extends CharacterBody2D
 
 @export_group("Nodes")
 @export var hang_timer: Timer
+@export var mesh: MeshInstance2D
 @export var state_machine: StateMachine
 @export var bouncing_state: State
 @export var falling_state: State
@@ -91,11 +92,11 @@ func handle_movement(delta_time: float) -> void:
 		)
 
 
-func get_hit(hitbox: Hitbox) -> void:
+func get_hit(_hitbox: Hitbox) -> void:
 	pass
 
 
-func on_hit(hurtbox: Hurtbox) -> void:
+func on_hit(_hurtbox: Hurtbox) -> void:
 	if Input.is_action_pressed("bounce"):
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25

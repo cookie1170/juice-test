@@ -2,6 +2,7 @@ extends State
 
 @export var grounded_state: State
 @export var falling_state: State
+@export var dash_indicator: Line2D
 
 var vel_tween: Tween
 var time_tween: Tween
@@ -9,6 +10,7 @@ var has_pressed: bool = false
 
 func enter(_previous_state: State = null) -> void:
 	super()
+	dash_indicator.show()
 	has_pressed = false
 	if time_tween:
 		time_tween.kill()
@@ -22,6 +24,7 @@ func exit() -> void:
 		vel_tween.kill()
 	if time_tween:
 		time_tween.kill()
+	dash_indicator.hide()
 	Engine.time_scale = 1.0
 
 
@@ -36,6 +39,7 @@ func _physics_process(delta: float) -> void:
 
 
 func dash() -> void:
+	dash_indicator.hide()
 	has_pressed = true
 	if time_tween:
 		time_tween.kill()
@@ -46,8 +50,16 @@ func dash() -> void:
 	vel_tween = get_tree().create_tween()
 	var dash_direction: Vector2 = owner.global_position. \
 	direction_to(get_global_mouse_position())
-	owner.velocity = owner.dash_vel * dash_direction
+	owner.velocity = owner.dash_vel * dash_direction * get_dash_vel_mult()
 	vel_tween.tween_property(owner, "velocity", Vector2.ZERO.lerp(owner.velocity, 0.5), owner.dash_time)
-	vel_tween.tween_callback(func():state_changed.emit(
+	vel_tween.tween_callback(func(): state_changed.emit(
 		grounded_state if owner.is_on_floor() else falling_state
 	))
+
+
+func get_dash_vel_mult() -> float:
+	var max_dist: float = dash_indicator.max_dist
+	var clamp_dist: float = clampf(owner.mesh.global_position. \
+	distance_to(get_global_mouse_position()), 0, max_dist)
+	var remapped_dist: float = remap(clamp_dist, 0.0, max_dist, 0.0, 1.0)
+	return remapped_dist
