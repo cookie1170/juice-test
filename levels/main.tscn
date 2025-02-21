@@ -35,9 +35,10 @@ phantom_camera = NodePath("../PhantomCamera")
 
 [node name="Camera" type="Camera2D" parent="."]
 physics_interpolation_mode = 1
-position = Vector2(0, -128)
+position = Vector2(0, -196)
 ignore_rotation = false
 process_callback = 0
+limit_bottom = 128
 
 [node name="PhantomCameraHost" type="Node" parent="Camera"]
 process_priority = 300
@@ -47,14 +48,14 @@ script = ExtResource("2_5k4jt")
 
 [node name="PhantomCamera" type="Node2D" parent="." node_paths=PackedStringArray("follow_target")]
 top_level = true
-position = Vector2(0, -128)
+position = Vector2(0, -196)
 script = ExtResource("3_qy63d")
 follow_mode = 5
 follow_target = NodePath("../Player")
 tween_resource = SubResource("Resource_272bh")
 dead_zone_width = 0.2
 dead_zone_height = 0.4
-show_viewfinder_in_play = true
+limit_bottom = 128
 metadata/_custom_type_script = "uid://ckjqglobgtbtn"
 
 [node name="BasicEnemy" parent="." instance=ExtResource("5_ifaiv")]
