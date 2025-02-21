@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://bb50k1yv6oej1"]
+[gd_scene load_steps=11 format=3 uid="uid://bb50k1yv6oej1"]
 
 [ext_resource type="PackedScene" uid="uid://lj17m112ehpt" path="res://player/player.tscn" id="1_ifaiv"]
 [ext_resource type="Script" uid="uid://bo2dj1yk8lfa" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_5k4jt"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://dvq8lfxsyc554" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_6et1j"]
 [ext_resource type="PackedScene" uid="uid://517hm5oeryf5" path="res://enemies/basic_enemy/basic_enemy.tscn" id="5_ifaiv"]
 [ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="6_5k4jt"]
+[ext_resource type="Script" uid="uid://t4jiyx57far2" path="res://levels/bottom_boundary.gd" id="7_qy63d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 size = Vector2(3200, 64)
@@ -15,6 +16,8 @@ script = ExtResource("4_6et1j")
 duration = 1.0
 transition = 0
 ease = 2
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_6et1j"]
 
 [node name="Main" type="Node2D"]
 
@@ -97,3 +100,10 @@ texture = ExtResource("6_5k4jt")
 [node name="Icon7" type="Sprite2D" parent="."]
 position = Vector2(-1632, -280)
 texture = ExtResource("6_5k4jt")
+
+[node name="BottomBoundary" type="Area2D" parent="."]
+position = Vector2(0, 256)
+script = ExtResource("7_qy63d")
+
+[node name="Collider" type="CollisionShape2D" parent="BottomBoundary"]
+shape = SubResource("WorldBoundaryShape2D_6et1j")
