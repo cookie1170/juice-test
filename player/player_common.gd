@@ -18,6 +18,9 @@ extends CharacterBody2D
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var deceleration_time: float = 0.15
 @export_range(0.0, 1.0, 0.05) var air_accel_mult: float = 0.5
 @export_range(0.0, 1.0, 0.05) var air_decel_mult: float = 0.5
+@export_group("Camera Settings")
+@export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var offset_time: float = 0.25
+@export var offset_amount: Vector2 = Vector2(384.0, 0.0)
 
 #endregion
 
@@ -25,12 +28,14 @@ extends CharacterBody2D
 
 @export_group("Nodes")
 @export var hang_timer: Timer
+@export var offset_timer: Timer
 @export var mesh: MeshInstance2D
 @export var state_machine: StateMachine
 @export var bouncing_state: State
 @export var falling_state: State
 @export var dashing_state: State
 @export var grounded_state: State
+@export var phantom_camera: PhantomCamera2D
 
 #endregion
 
@@ -48,13 +53,16 @@ extends CharacterBody2D
 #region misc variables
 
 var is_dashing: bool = false
+var cam_offset_tween: Tween
+var final_offset: Vector2
+var is_cam_tweening: bool
 
 #endregion
 
 
 func _ready() -> void:
-	hang_timer.wait_time = hang_time
 	Ref.player = self
+	hang_timer.wait_time = hang_time
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -66,6 +74,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	handle_movement(delta)
+	handle_cam_offset()
 	move_and_slide()
 
 
@@ -92,6 +101,19 @@ func handle_movement(delta_time: float) -> void:
 		)
 
 
+func handle_cam_offset() -> void:
+	if cam_offset_tween:
+		cam_offset_tween.kill()
+	cam_offset_tween = get_tree().create_tween()
+	if offset_timer.is_stopped() and not velocity.x == 0.0:
+		offset_timer.start()
+	if velocity.x == 0.0:
+		offset_timer.stop()
+		final_offset.x = 0.0
+	cam_offset_tween.tween_method(phantom_camera.set_follow_offset, \
+	phantom_camera.get_follow_offset(), final_offset, offset_time)
+
+
 func get_hit(_hitbox: Hitbox) -> void:
 	pass
 
@@ -101,3 +123,7 @@ func on_hit(_hurtbox: Hurtbox) -> void:
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
 	print_debug("enemy hit")
+
+
+func _on_offset_timeout() -> void:
+	final_offset.x = signf(velocity.x) * offset_amount.x

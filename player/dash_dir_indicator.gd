@@ -6,7 +6,7 @@ extends Line2D
 var pos_tween: Tween
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	set_point_position(0, mesh.global_position)
 	set_point_position(1, mesh.global_position - \
 	(mesh.global_position - get_global_mouse_position()). \

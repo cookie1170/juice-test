@@ -22,7 +22,7 @@ radius = 40.7922
 [sub_resource type="CircleShape2D" id="CircleShape2D_rgyib"]
 radius = 16.0
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "mesh", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "offset_timer", "mesh", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
 physics_interpolation_mode = 1
 script = ExtResource("1_4flbx")
 peak_time = 0.45
@@ -34,6 +34,7 @@ top_speed = 640.0
 air_accel_mult = 0.25
 air_decel_mult = 0.25
 hang_timer = NodePath("HangTimer")
+offset_timer = NodePath("OffsetTimer")
 mesh = NodePath("Mesh")
 state_machine = NodePath("StateMachine")
 bouncing_state = NodePath("StateMachine/Bouncing")
@@ -42,6 +43,7 @@ dashing_state = NodePath("StateMachine/Dashing")
 grounded_state = NodePath("StateMachine/Grounded")
 
 [node name="Mesh" type="MeshInstance2D" parent="."]
+physics_interpolation_mode = 1
 position = Vector2(0, -24)
 scale = Vector2(48, 48)
 mesh = SubResource("SphereMesh_sh265")
@@ -49,6 +51,11 @@ mesh = SubResource("SphereMesh_sh265")
 [node name="Collider" type="CollisionShape2D" parent="."]
 position = Vector2(0, -24)
 shape = SubResource("CircleShape2D_sh265")
+
+[node name="OffsetTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.25
+one_shot = true
 
 [node name="HangTimer" type="Timer" parent="."]
 unique_name_in_owner = true
@@ -133,3 +140,5 @@ metadata/_custom_type_script = "uid://pt8x4gqtpuhh"
 position = Vector2(0, -24)
 shape = SubResource("CircleShape2D_rgyib")
 debug_color = Color(1, 0.16, 0.16, 0.419608)
+
+[connection signal="timeout" from="OffsetTimer" to="." method="_on_offset_timeout"]
