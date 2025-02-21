@@ -9,11 +9,12 @@ extends CharacterBody2D
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var fall_time: float = 0.25
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var hang_time: float = 0.1
 @export_range(0.0, 1.0, 0.05) var bounce_peak_y_mult: float = 0.5
+@export_range(0.0, 4096, 0.5, "or_greater", "suffix:px/s") var terminal_velocity: float
 @export_group("Dashing")
-@export_range(0.0, 512.0, 0.5, "or_greater", "suffix:px") var dash_distance: float
+@export_range(0.0, 1024.0, 0.5, "or_greater", "suffix:px") var dash_distance: float
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var dash_time: float
 @export_group("Rolling")
-@export_range(0.0, 512.0, 0.5, "or_greater", "suffix:px/s") var top_speed: float = 320.0
+@export_range(0.0, 1024.0, 0.5, "or_greater", "suffix:px/s") var top_speed: float = 320.0
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var acceleration_time: float = 0.15
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var deceleration_time: float = 0.15
 @export_range(0.0, 1.0, 0.05) var air_accel_mult: float = 0.5
@@ -84,6 +85,8 @@ func _physics_process(delta: float) -> void:
 
 func apply_gravity(delta_time: float, gravity: float) -> void:
 	velocity.y -= gravity * (bounce_peak_y_mult if not hang_timer.is_stopped() else 1.0) * delta_time
+	velocity.y = clampf(velocity.y, -INF, terminal_velocity)
+
 
 func handle_movement(delta_time: float) -> void:
 	if state_machine.current_state == dashing_state:
@@ -114,6 +117,10 @@ func handle_cam_offset() -> void:
 	if velocity.x == 0.0:
 		offset_timer.stop()
 		final_offset.x = 0.0
+	if velocity.y >= 256.0:
+		final_offset.y = offset_amount.y
+	else:
+		final_offset.y = 0.0
 	cam_offset_tween.tween_method(phantom_camera.set_follow_offset, \
 	phantom_camera.get_follow_offset(), final_offset, offset_time)
 

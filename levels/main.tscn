@@ -54,6 +54,7 @@ follow_target = NodePath("../Player")
 tween_resource = SubResource("Resource_272bh")
 dead_zone_width = 0.2
 dead_zone_height = 0.4
+show_viewfinder_in_play = true
 metadata/_custom_type_script = "uid://ckjqglobgtbtn"
 
 [node name="BasicEnemy" parent="." instance=ExtResource("5_ifaiv")]
