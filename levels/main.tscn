@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://bb50k1yv6oej1"]
+[gd_scene load_steps=13 format=3 uid="uid://bb50k1yv6oej1"]
 
 [ext_resource type="PackedScene" uid="uid://lj17m112ehpt" path="res://player/player.tscn" id="1_ifaiv"]
 [ext_resource type="Script" uid="uid://bo2dj1yk8lfa" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_5k4jt"]
 [ext_resource type="Script" uid="uid://ckjqglobgtbtn" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_2d.gd" id="3_qy63d"]
 [ext_resource type="Script" uid="uid://dvq8lfxsyc554" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_6et1j"]
+[ext_resource type="Script" uid="uid://ddspebxr558xv" path="res://addons/phantom_camera/scripts/resources/phantom_camera_noise_2d.gd" id="5_6et1j"]
 [ext_resource type="PackedScene" uid="uid://517hm5oeryf5" path="res://enemies/basic_enemy/basic_enemy.tscn" id="5_ifaiv"]
 [ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="6_5k4jt"]
 [ext_resource type="Script" uid="uid://t4jiyx57far2" path="res://levels/bottom_boundary.gd" id="7_qy63d"]
@@ -11,11 +12,24 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 size = Vector2(3200, 64)
 
-[sub_resource type="Resource" id="Resource_272bh"]
+[sub_resource type="Resource" id="Resource_6et1j"]
 script = ExtResource("4_6et1j")
 duration = 1.0
 transition = 0
 ease = 2
+
+[sub_resource type="Resource" id="Resource_etqu2"]
+script = ExtResource("5_6et1j")
+amplitude = 24.0
+frequency = 1.0
+randomize_noise_seed = 1
+noise_seed = 0
+positional_noise = false
+rotational_noise = false
+positional_multiplier_x = 1.0
+positional_multiplier_y = 1.0
+rotational_multiplier = 1.0
+metadata/_custom_type_script = "uid://ddspebxr558xv"
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_6et1j"]
 
@@ -55,10 +69,11 @@ position = Vector2(0, -196)
 script = ExtResource("3_qy63d")
 follow_mode = 5
 follow_target = NodePath("../Player")
-tween_resource = SubResource("Resource_272bh")
+tween_resource = SubResource("Resource_6et1j")
 dead_zone_width = 0.2
 dead_zone_height = 0.4
 limit_bottom = 128
+noise = SubResource("Resource_etqu2")
 metadata/_custom_type_script = "uid://ckjqglobgtbtn"
 
 [node name="BasicEnemy" parent="." instance=ExtResource("5_ifaiv")]

@@ -173,16 +173,20 @@ script = ExtResource("2_8t03j")
 mesh = NodePath("../Mesh")
 max_dist = 192.0
 
-[node name="Trail" type="Line2D" parent="."]
+[node name="Trail" type="Line2D" parent="." node_paths=PackedStringArray("dash_attack_timer")]
 show_behind_parent = true
 top_level = true
 z_index = -1
 width_curve = SubResource("Curve_kb6p2")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
 script = ExtResource("3_ebec5")
-point_amount = 24
+default_point_amount = 25
+dash_attack_timer = NodePath("../DashAttackTimer")
 
 [node name="Timer" type="Timer" parent="Trail"]
-wait_time = 0.013
+wait_time = 0.015
 autostart = true
 
 [node name="StateMachine" type="Node2D" parent="." node_paths=PackedStringArray("default_state")]
@@ -210,6 +214,7 @@ hang_timer = NodePath("../../HangTimer")
 metadata/_custom_type_script = "uid://d3mvxnoga10c0"
 
 [node name="Dashing" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("grounded_state", "falling_state", "dash_indicator", "dash_particles_1", "dash_particles_2")]
+visible = false
 script = ExtResource("5_qjkh3")
 grounded_state = NodePath("../Grounded")
 falling_state = NodePath("../Falling")

@@ -59,6 +59,7 @@ func _physics_process(delta: float) -> void:
 func dash() -> void:
 	var dash_direction: Vector2 = owner.global_position. \
 	direction_to(get_global_mouse_position())
+	owner.trail.point_amount = owner.trail.default_point_amount
 	dash_particles_2.rotation = dash_direction.angle()
 	dash_particles_1.restart()
 	dash_particles_2.restart()
@@ -91,6 +92,11 @@ func dash() -> void:
 	vel_tween.tween_callback(func(): state_changed.emit(
 		grounded_state if owner.is_on_floor() else falling_state
 	))
+	owner.phantom_camera.noise.amplitude = 24.0
+	owner.phantom_camera.noise.frequency = 1.0
+	owner.phantom_camera.noise.positional_noise = true
+	await get_tree().create_timer(0.1).timeout
+	owner.phantom_camera.noise.positional_noise = false
 
 
 func get_dash_vel_mult() -> float:
