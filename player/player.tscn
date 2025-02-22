@@ -334,7 +334,6 @@ debug_color = Color(1, 0.16, 0.16, 0.419608)
 
 [node name="DashParticles" type="GPUParticles2D" parent="."]
 physics_interpolation_mode = 1
-visible = false
 show_behind_parent = true
 position = Vector2(0, -24)
 emitting = false
@@ -347,7 +346,6 @@ fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_ebec5")
 
 [node name="DashParticles2" type="GPUParticles2D" parent="."]
-visible = false
 show_behind_parent = true
 position = Vector2(0, -24)
 emitting = false
