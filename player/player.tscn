@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=3 uid="uid://lj17m112ehpt"]
+[gd_scene load_steps=49 format=3 uid="uid://lj17m112ehpt"]
 
 [ext_resource type="Script" uid="uid://c08p2djcihe2o" path="res://player/player_common.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://ck2pawb0jmb51" path="res://player/dash_dir_indicator.gd" id="2_8t03j"]
@@ -12,7 +12,9 @@
 [ext_resource type="Script" uid="uid://d0dcgwjybsqd6" path="res://common/hitbox.gd" id="8_hg6s5"]
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="8_rgyib"]
 [ext_resource type="PackedScene" uid="uid://c3m2m678oe1bj" path="res://player/ghost_clone.tscn" id="9_yllr7"]
-[ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://player/circle.svg" id="11_2ieo8"]
+[ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://common/circle.svg" id="11_2ieo8"]
+[ext_resource type="Texture2D" uid="uid://w3fx0ky4iuet" path="res://common/circle_higher_res.svg" id="14_wodsf"]
+[ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="15_32hag"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_sh265"]
 radius = 24.0
@@ -172,6 +174,15 @@ gravity = Vector3(0, 98, 0)
 scale_curve = SubResource("CurveTexture_x7c3f")
 color_ramp = SubResource("GradientTexture1D_65viv")
 
+[sub_resource type="GDScript" id="GDScript_wodsf"]
+resource_name = "light_follow"
+script/source = "extends PointLight2D
+
+
+func _process(delta: float) -> void:
+	global_position = global_position.lerp(owner.global_position, clampf(10 * delta, 0.0, 1.0))
+"
+
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "offset_timer", "dash_attack_timer", "mesh", "dash_particles", "hurt_particles_1", "hurt_particles_2", "trail", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
 physics_interpolation_mode = 1
 script = ExtResource("1_4flbx")
@@ -283,6 +294,7 @@ metadata/_custom_type_script = "uid://d3mvxnoga10c0"
 visible = false
 script = ExtResource("5_qjkh3")
 clone_amount = 5
+vignette_dist = 128.0
 grounded_state = NodePath("../Grounded")
 falling_state = NodePath("../Falling")
 clone_timer = NodePath("CloneTimer")
@@ -375,6 +387,21 @@ one_shot = true
 explosiveness = 0.85
 randomness = 0.5
 process_material = SubResource("ParticleProcessMaterial_c35mf")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+top_level = true
+position = Vector2(0, -24)
+energy = 0.5
+range_item_cull_mask = 2
+texture = ExtResource("14_wodsf")
+texture_scale = 0.5
+script = SubResource("GDScript_wodsf")
+
+[node name="Icon" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-8.00002, -52)
+scale = Vector2(4.125, 4.0625)
+texture = ExtResource("15_32hag")
 
 [connection signal="timeout" from="OffsetTimer" to="." method="_on_offset_timeout"]
 [connection signal="timeout" from="Trail/TrailTimer" to="Trail" method="_timeout"]

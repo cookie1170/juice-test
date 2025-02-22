@@ -173,13 +173,13 @@ func get_hit(hitbox: Hitbox) -> void:
 	phantom_camera.noise.amplitude = 64.0
 	phantom_camera.noise.frequency = 2.0
 	phantom_camera.noise.positional_noise = true
-	Vignette.fade_vignette(100.0, 0.1, 1)
+	Vignette.fade_vignette(128.0, 0.1, 1)
 	await get_tree().create_timer(0.15, true, false, true).timeout
 	hurt_particles_1.restart()
 	hurt_particles_2.restart()
 	await get_tree().create_timer(0.2, true, false, true).timeout
 	phantom_camera.noise.positional_noise = false
-	Vignette.fade_vignette(100.0, 0.35, 0)
+	Vignette.fade_vignette(128.0, 0.35, 0)
 
 
 func on_hit(_hurtbox: Hurtbox) -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bb50k1yv6oej1"]
+[gd_scene load_steps=17 format=4 uid="uid://bb50k1yv6oej1"]
 
 [ext_resource type="PackedScene" uid="uid://lj17m112ehpt" path="res://player/player.tscn" id="1_ifaiv"]
 [ext_resource type="Script" uid="uid://bo2dj1yk8lfa" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_5k4jt"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://ddspebxr558xv" path="res://addons/phantom_camera/scripts/resources/phantom_camera_noise_2d.gd" id="5_6et1j"]
 [ext_resource type="PackedScene" uid="uid://517hm5oeryf5" path="res://enemies/basic_enemy/basic_enemy.tscn" id="5_ifaiv"]
 [ext_resource type="Script" uid="uid://t4jiyx57far2" path="res://levels/bottom_boundary.gd" id="7_qy63d"]
+[ext_resource type="Texture2D" uid="uid://bpjwln74tm0x2" path="res://test.svg" id="10_jw1n3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 size = Vector2(3200, 64)
@@ -32,7 +33,29 @@ metadata/_custom_type_script = "uid://ddspebxr558xv"
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_6et1j"]
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_etqu2"]
+light_mode = 2
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_etqu2"]
+texture = ExtResource("10_jw1n3")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_c7dyn"]
+tile_shape = 3
+tile_size = Vector2i(128, 128)
+sources/2 = SubResource("TileSetAtlasSource_etqu2")
+
+[sub_resource type="Environment" id="Environment_etqu2"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 1.5
+glow_strength = 0.3
+glow_bloom = 0.5
+glow_blend_mode = 0
+
 [node name="Main" type="Node2D"]
+metadata/_edit_lock_ = true
 
 [node name="Floor" type="StaticBody2D" parent="."]
 
@@ -111,3 +134,20 @@ script = ExtResource("7_qy63d")
 
 [node name="Collider" type="CollisionShape2D" parent="BottomBoundary"]
 shape = SubResource("WorldBoundaryShape2D_6et1j")
+
+[node name="Parallax2D2" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.75, 0.75)
+repeat_size = Vector2(1152, 766)
+repeat_times = 3
+metadata/_edit_lock_ = true
+
+[node name="TileMapLayer" type="TileMapLayer" parent="Parallax2D2"]
+modulate = Color(0.51, 0.9755, 1, 1)
+light_mask = 2
+z_index = -5
+material = SubResource("CanvasItemMaterial_etqu2")
+tile_map_data = PackedByteArray("AAAIAAYAAgAAAAAAAAAJAAYAAgAAAAAAAAAIAAUAAgAAAAAAAAAIAAQAAgAAAAAAAAAJAAQAAgAAAAAAAAAIAAMAAgAAAAAAAAAIAAIAAgAAAAAAAAAJAAIAAgAAAAAAAAAIAAEAAgAAAAAAAAAJAAAAAgAAAAAAAAAIAAAAAgAAAAAAAAAIAP//AgAAAAAAAAAHAAYAAgAAAAAAAAAGAAYAAgAAAAAAAAAFAAYAAgAAAAAAAAAEAAYAAgAAAAAAAAADAAYAAgAAAAAAAAACAAYAAgAAAAAAAAABAAYAAgAAAAAAAAAAAP//AgAAAAAAAAABAP//AgAAAAAAAAACAP//AgAAAAAAAAADAP//AgAAAAAAAAAEAP//AgAAAAAAAAAFAP//AgAAAAAAAAAGAP//AgAAAAAAAAAHAP//AgAAAAAAAAAHAAAAAgAAAAAAAAAGAAAAAgAAAAAAAAAFAAAAAgAAAAAAAAAEAAAAAgAAAAAAAAADAAAAAgAAAAAAAAACAAAAAgAAAAAAAAABAAAAAgAAAAAAAAAAAAEAAgAAAAAAAAABAAEAAgAAAAAAAAACAAEAAgAAAAAAAAADAAEAAgAAAAAAAAAEAAEAAgAAAAAAAAAFAAEAAgAAAAAAAAAGAAEAAgAAAAAAAAAHAAEAAgAAAAAAAAAHAAIAAgAAAAAAAAAHAAMAAgAAAAAAAAAHAAQAAgAAAAAAAAAHAAUAAgAAAAAAAAAGAAUAAgAAAAAAAAAFAAUAAgAAAAAAAAAEAAUAAgAAAAAAAAADAAUAAgAAAAAAAAACAAUAAgAAAAAAAAABAAUAAgAAAAAAAAAAAAUAAgAAAAAAAAABAAQAAgAAAAAAAAAAAAMAAgAAAAAAAAABAAIAAgAAAAAAAAACAAIAAgAAAAAAAAACAAMAAgAAAAAAAAADAAIAAgAAAAAAAAAEAAIAAgAAAAAAAAAFAAIAAgAAAAAAAAAGAAIAAgAAAAAAAAAGAAMAAgAAAAAAAAAGAAQAAgAAAAAAAAAFAAMAAgAAAAAAAAAFAAQAAgAAAAAAAAAEAAMAAgAAAAAAAAAEAAQAAgAAAAAAAAADAAMAAgAAAAAAAAADAAQAAgAAAAAAAAACAAQAAgAAAAAAAAABAAMAAgAAAAAAAAA=")
+tile_set = SubResource("TileSet_c7dyn")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_etqu2")

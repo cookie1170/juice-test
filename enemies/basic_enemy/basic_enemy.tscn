@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="2_yx0l5"]
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="3_eopwh"]
 [ext_resource type="Script" uid="uid://d0dcgwjybsqd6" path="res://common/hitbox.gd" id="4_xuk7h"]
-[ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://player/circle.svg" id="6_u66kj"]
+[ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://common/circle.svg" id="6_u66kj"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_m6spd"]
 seed = 455
