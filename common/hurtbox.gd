@@ -31,3 +31,5 @@ func _physics_process(_delta: float) -> void:
 func get_hit(hitbox: Hitbox) -> void:
 	if owner.has_method("get_hit"):
 		owner.get_hit(hitbox)
+		if hitbox.detect_hits:
+			hitbox.on_hit(self)

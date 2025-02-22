@@ -66,7 +66,6 @@ var move_direction: float
 
 #endregion
 
-
 func _ready() -> void:
 	Ref.player = self
 	hang_timer.wait_time = hang_time
@@ -83,8 +82,8 @@ func _physics_process(delta: float) -> void:
 	handle_movement(delta)
 	handle_cam_offset()
 	handle_dash_attack()
+	handle_mesh_rotation()
 	move_and_slide()
-
 
 #region handlers
 
@@ -141,6 +140,9 @@ func handle_dash_attack() -> void:
 	dash_particles.emitting = not dash_attack_timer.is_stopped()
 	dash_hitbox.monitorable = not dash_attack_timer.is_stopped()
 	dash_hitbox.monitoring = not dash_attack_timer.is_stopped()
+
+func handle_mesh_rotation() -> void:
+	mesh.rotation = velocity.angle()
 
 #endregion
 

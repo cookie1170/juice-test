@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 Ref="*res://global/ref.gd"
 FullscreenManager="*res://common/fullscreen_manager.gd"
+Vignette="*res://common/vignette.tscn"
 
 [display]
 
@@ -78,8 +79,6 @@ fullscreen={
 2d_physics/layer_1="Terrain"
 2d_physics/layer_2="Enemy Hitboxes"
 2d_physics/layer_3="Player Hitboxes"
-2d_physics/layer_4="Enemy Hurtboxes"
-2d_physics/layer_5="Player Hurtboxes"
 
 [physics]
 
