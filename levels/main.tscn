@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bb50k1yv6oej1"]
+[gd_scene load_steps=12 format=3 uid="uid://bb50k1yv6oej1"]
 
 [ext_resource type="PackedScene" uid="uid://lj17m112ehpt" path="res://player/player.tscn" id="1_ifaiv"]
 [ext_resource type="Script" uid="uid://bo2dj1yk8lfa" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_5k4jt"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" uid="uid://dvq8lfxsyc554" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_6et1j"]
 [ext_resource type="Script" uid="uid://ddspebxr558xv" path="res://addons/phantom_camera/scripts/resources/phantom_camera_noise_2d.gd" id="5_6et1j"]
 [ext_resource type="PackedScene" uid="uid://517hm5oeryf5" path="res://enemies/basic_enemy/basic_enemy.tscn" id="5_ifaiv"]
-[ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="6_5k4jt"]
 [ext_resource type="Script" uid="uid://t4jiyx57far2" path="res://levels/bottom_boundary.gd" id="7_qy63d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
@@ -85,36 +84,26 @@ position = Vector2(832, 0)
 [node name="BasicEnemy3" parent="." instance=ExtResource("5_ifaiv")]
 position = Vector2(1152, 0)
 
+[node name="BasicEnemy5" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(928, -400)
+
+[node name="BasicEnemy6" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(320, -416)
+
 [node name="BasicEnemy4" parent="." instance=ExtResource("5_ifaiv")]
 position = Vector2(192, 0)
 
-[node name="Icon" type="Sprite2D" parent="."]
-position = Vector2(688, -264)
-texture = ExtResource("6_5k4jt")
+[node name="BasicEnemy7" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(-696, -32)
 
-[node name="Icon2" type="Sprite2D" parent="."]
-position = Vector2(240, -240)
-texture = ExtResource("6_5k4jt")
+[node name="BasicEnemy10" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(-1352, -16)
 
-[node name="Icon3" type="Sprite2D" parent="."]
-position = Vector2(-384, -224)
-texture = ExtResource("6_5k4jt")
+[node name="BasicEnemy8" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(-984, -384)
 
-[node name="Icon4" type="Sprite2D" parent="."]
-position = Vector2(-184, -232)
-texture = ExtResource("6_5k4jt")
-
-[node name="Icon5" type="Sprite2D" parent="."]
-position = Vector2(-960, -304)
-texture = ExtResource("6_5k4jt")
-
-[node name="Icon6" type="Sprite2D" parent="."]
-position = Vector2(-1272, -152)
-texture = ExtResource("6_5k4jt")
-
-[node name="Icon7" type="Sprite2D" parent="."]
-position = Vector2(-1632, -280)
-texture = ExtResource("6_5k4jt")
+[node name="BasicEnemy9" parent="." instance=ExtResource("5_ifaiv")]
+position = Vector2(-400, -432)
 
 [node name="BottomBoundary" type="Area2D" parent="."]
 position = Vector2(0, 256)
