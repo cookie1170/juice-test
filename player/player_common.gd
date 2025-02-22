@@ -32,6 +32,8 @@ extends CharacterBody2D
 @export var offset_timer: Timer
 @export var dash_attack_timer: Timer
 @export var mesh: MeshInstance2D
+@export var dash_particles: GPUParticles2D
+@export var trail: Line2D
 @export var dash_hitbox: Hitbox
 @export var hurtbox: Hurtbox
 @export var state_machine: StateMachine
@@ -84,6 +86,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
+#region handlers
+
 func apply_gravity(delta_time: float, gravity: float) -> void:
 	velocity.y -= gravity * (bounce_peak_y_mult if not hang_timer.is_stopped() else 1.0) * delta_time
 	velocity.y = clampf(velocity.y, -INF, terminal_velocity)
@@ -134,8 +138,11 @@ func handle_cam_offset() -> void:
 func handle_dash_attack() -> void:
 	if state_machine.current_state == grounded_state:
 		dash_attack_timer.stop()
+	dash_particles.emitting = not dash_attack_timer.is_stopped()
 	dash_hitbox.monitorable = not dash_attack_timer.is_stopped()
 	dash_hitbox.monitoring = not dash_attack_timer.is_stopped()
+
+#endregion
 
 
 func get_hit(hitbox: Hitbox) -> void:
