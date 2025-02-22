@@ -2,7 +2,9 @@ shader_type canvas_item;
 
 uniform float amount : hint_range(0.0, 1.0, 0.01);
 uniform float burn_edge_size : hint_range(0.0, 1.0, 0.01);
+uniform float tint_amount : hint_range(0.0, 1.0, 0.01);
 uniform vec4 burn_edge_color : source_color;
+uniform vec3 tint_color : source_color;
 uniform sampler2D noise_texture;
 
 
@@ -13,5 +15,5 @@ void fragment() {
 	float dissolve_threshold = step(amount_at_uv, inversed_amount); // 0 or 1
 	float burn_edge = step(burn_edge_step, inversed_amount - burn_edge_size);
 	COLOR.a *= dissolve_threshold;
-	COLOR.rgb = mix(COLOR, burn_edge_color, 1.0 - burn_edge).rgb;
+	COLOR.rgb = mix(mix(COLOR.rgb, tint_color, tint_amount).rgb, burn_edge_color.rgb, 1.0 - burn_edge);
 }

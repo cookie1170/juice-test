@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://w3fx0ky4iuet"
-path="res://.godot/imported/circle_higher_res.svg-12fdc99fc41b3283f81d23c4e5829fd4.ctex"
+uid="uid://1y3wbcurnqic"
+path="res://.godot/imported/hexagon_highlight.svg-94e48dc0f1027a260a5cb66bd7a11bc5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://common/circle_higher_res.svg"
-dest_files=["res://.godot/imported/circle_higher_res.svg-12fdc99fc41b3283f81d23c4e5829fd4.ctex"]
+source_file="res://common/sprites/hexagon_highlight.svg"
+dest_files=["res://.godot/imported/hexagon_highlight.svg-94e48dc0f1027a260a5cb66bd7a11bc5.ctex"]
 
 [params]
 
@@ -32,6 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=16.0
+svg/scale=1.0
 editor/scale_with_editor_scale=false
 editor/convert_colors_with_editor_theme=false

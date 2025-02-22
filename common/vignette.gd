@@ -18,6 +18,9 @@ func fade_vignette(dist: float, time: float, type = 1) -> void:
 				material.set_shader_parameter("dist", value),
 			material.get_shader_parameter("dist"), get_vignette_max_dist(), time)
 		1:
+			if material.get_shader_parameter("dist") == dist:
+				tween.kill()
+				return
 			tween.tween_method(func(value: float):
 				material.set_shader_parameter("dist", value),
 			get_vignette_max_dist(), dist, time)

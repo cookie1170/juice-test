@@ -16,6 +16,7 @@ extends CharacterBody2D
 #endregion
 
 var dissolve_tween: Tween
+var tint_tween: Tween
 
 
 func _physics_process(_delta: float) -> void:
@@ -37,6 +38,13 @@ func get_hit(attack_hitbox: Hitbox):
 	dissolve_tween.tween_method(func(value: float):
 		sprite.material.set_shader_parameter("amount", value),
 	0.0, 1.0, 0.25)
+	tint_tween = get_tree().create_tween()
+	tint_tween.tween_method(func(value: float):
+		sprite.material.set_shader_parameter("tint_amount", value),
+	0.0, 1.0, 0.2)
+	tint_tween.tween_method(func(value: float):
+		sprite.material.set_shader_parameter("tint_amount", value),
+	1.0, 0.5, 0.5)
 	dissolve_tween.tween_callback(queue_free).set_delay(0.75)
 
 

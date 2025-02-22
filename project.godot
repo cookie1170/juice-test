@@ -21,6 +21,7 @@ PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_came
 Ref="*res://global/ref.gd"
 FullscreenManager="*res://common/fullscreen_manager.gd"
 Vignette="*res://common/vignette.tscn"
+Hitstop="*res://common/hitstop.gd"
 
 [display]
 

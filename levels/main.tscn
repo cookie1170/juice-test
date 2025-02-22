@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://bb50k1yv6oej1"]
+[gd_scene load_steps=20 format=4 uid="uid://bb50k1yv6oej1"]
 
 [ext_resource type="PackedScene" uid="uid://lj17m112ehpt" path="res://player/player.tscn" id="1_ifaiv"]
 [ext_resource type="Script" uid="uid://bo2dj1yk8lfa" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="2_5k4jt"]
@@ -6,8 +6,17 @@
 [ext_resource type="Script" uid="uid://dvq8lfxsyc554" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_6et1j"]
 [ext_resource type="Script" uid="uid://ddspebxr558xv" path="res://addons/phantom_camera/scripts/resources/phantom_camera_noise_2d.gd" id="5_6et1j"]
 [ext_resource type="PackedScene" uid="uid://517hm5oeryf5" path="res://enemies/basic_enemy/basic_enemy.tscn" id="5_ifaiv"]
+[ext_resource type="Texture2D" uid="uid://1y3wbcurnqic" path="res://common/sprites/hexagon_highlight.svg" id="7_etqu2"]
 [ext_resource type="Script" uid="uid://t4jiyx57far2" path="res://levels/bottom_boundary.gd" id="7_qy63d"]
-[ext_resource type="Texture2D" uid="uid://bpjwln74tm0x2" path="res://test.svg" id="10_jw1n3"]
+[ext_resource type="Texture2D" uid="uid://vty0sa55khrd" path="res://common/sprites/hexagon_filled.svg" id="8_etqu2"]
+
+[sub_resource type="Environment" id="Environment_etqu2"]
+background_mode = 3
+glow_enabled = true
+glow_strength = 0.5
+glow_bloom = 0.05
+glow_blend_mode = 0
+glow_hdr_threshold = 1.5
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7dm0k"]
 size = Vector2(3200, 64)
@@ -36,26 +45,31 @@ metadata/_custom_type_script = "uid://ddspebxr558xv"
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_etqu2"]
 light_mode = 2
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_etqu2"]
-texture = ExtResource("10_jw1n3")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xdh4e"]
+texture = ExtResource("7_etqu2")
 texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_c7dyn"]
 tile_shape = 3
 tile_size = Vector2i(128, 128)
-sources/2 = SubResource("TileSetAtlasSource_etqu2")
+sources/0 = SubResource("TileSetAtlasSource_xdh4e")
 
-[sub_resource type="Environment" id="Environment_etqu2"]
-background_mode = 3
-glow_enabled = true
-glow_intensity = 1.5
-glow_strength = 0.3
-glow_bloom = 0.5
-glow_blend_mode = 0
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jw1n3"]
+texture = ExtResource("8_etqu2")
+texture_region_size = Vector2i(128, 128)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_xdh4e"]
+tile_shape = 3
+tile_size = Vector2i(128, 128)
+sources/0 = SubResource("TileSetAtlasSource_jw1n3")
 
 [node name="Main" type="Node2D"]
 metadata/_edit_lock_ = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_etqu2")
 
 [node name="Floor" type="StaticBody2D" parent="."]
 
@@ -68,8 +82,9 @@ visible = false
 position = Vector2(0, 32)
 shape = SubResource("RectangleShape2D_7dm0k")
 
-[node name="Player" parent="." node_paths=PackedStringArray("phantom_camera") instance=ExtResource("1_ifaiv")]
+[node name="Player" parent="." node_paths=PackedStringArray("bg_highlight", "phantom_camera") instance=ExtResource("1_ifaiv")]
 position = Vector2(0, -128)
+bg_highlight = NodePath("../BGHighlight/BGHighlight")
 phantom_camera = NodePath("../PhantomCamera")
 
 [node name="Camera" type="Camera2D" parent="."]
@@ -98,36 +113,6 @@ limit_bottom = 128
 noise = SubResource("Resource_etqu2")
 metadata/_custom_type_script = "uid://ckjqglobgtbtn"
 
-[node name="BasicEnemy" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(512, 0)
-
-[node name="BasicEnemy2" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(832, 0)
-
-[node name="BasicEnemy3" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(1152, 0)
-
-[node name="BasicEnemy5" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(928, -400)
-
-[node name="BasicEnemy6" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(320, -416)
-
-[node name="BasicEnemy4" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(192, 0)
-
-[node name="BasicEnemy7" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(-696, -32)
-
-[node name="BasicEnemy10" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(-1352, -16)
-
-[node name="BasicEnemy8" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(-984, -384)
-
-[node name="BasicEnemy9" parent="." instance=ExtResource("5_ifaiv")]
-position = Vector2(-400, -432)
-
 [node name="BottomBoundary" type="Area2D" parent="."]
 position = Vector2(0, 256)
 script = ExtResource("7_qy63d")
@@ -135,19 +120,61 @@ script = ExtResource("7_qy63d")
 [node name="Collider" type="CollisionShape2D" parent="BottomBoundary"]
 shape = SubResource("WorldBoundaryShape2D_6et1j")
 
-[node name="Parallax2D2" type="Parallax2D" parent="."]
+[node name="BGHighlight" type="Parallax2D" parent="."]
 scroll_scale = Vector2(0.75, 0.75)
 repeat_size = Vector2(1152, 766)
 repeat_times = 3
 metadata/_edit_lock_ = true
 
-[node name="TileMapLayer" type="TileMapLayer" parent="Parallax2D2"]
+[node name="BGHighlight" type="TileMapLayer" parent="BGHighlight"]
 modulate = Color(0.51, 0.9755, 1, 1)
 light_mask = 2
 z_index = -5
 material = SubResource("CanvasItemMaterial_etqu2")
-tile_map_data = PackedByteArray("AAAIAAYAAgAAAAAAAAAJAAYAAgAAAAAAAAAIAAUAAgAAAAAAAAAIAAQAAgAAAAAAAAAJAAQAAgAAAAAAAAAIAAMAAgAAAAAAAAAIAAIAAgAAAAAAAAAJAAIAAgAAAAAAAAAIAAEAAgAAAAAAAAAJAAAAAgAAAAAAAAAIAAAAAgAAAAAAAAAIAP//AgAAAAAAAAAHAAYAAgAAAAAAAAAGAAYAAgAAAAAAAAAFAAYAAgAAAAAAAAAEAAYAAgAAAAAAAAADAAYAAgAAAAAAAAACAAYAAgAAAAAAAAABAAYAAgAAAAAAAAAAAP//AgAAAAAAAAABAP//AgAAAAAAAAACAP//AgAAAAAAAAADAP//AgAAAAAAAAAEAP//AgAAAAAAAAAFAP//AgAAAAAAAAAGAP//AgAAAAAAAAAHAP//AgAAAAAAAAAHAAAAAgAAAAAAAAAGAAAAAgAAAAAAAAAFAAAAAgAAAAAAAAAEAAAAAgAAAAAAAAADAAAAAgAAAAAAAAACAAAAAgAAAAAAAAABAAAAAgAAAAAAAAAAAAEAAgAAAAAAAAABAAEAAgAAAAAAAAACAAEAAgAAAAAAAAADAAEAAgAAAAAAAAAEAAEAAgAAAAAAAAAFAAEAAgAAAAAAAAAGAAEAAgAAAAAAAAAHAAEAAgAAAAAAAAAHAAIAAgAAAAAAAAAHAAMAAgAAAAAAAAAHAAQAAgAAAAAAAAAHAAUAAgAAAAAAAAAGAAUAAgAAAAAAAAAFAAUAAgAAAAAAAAAEAAUAAgAAAAAAAAADAAUAAgAAAAAAAAACAAUAAgAAAAAAAAABAAUAAgAAAAAAAAAAAAUAAgAAAAAAAAABAAQAAgAAAAAAAAAAAAMAAgAAAAAAAAABAAIAAgAAAAAAAAACAAIAAgAAAAAAAAACAAMAAgAAAAAAAAADAAIAAgAAAAAAAAAEAAIAAgAAAAAAAAAFAAIAAgAAAAAAAAAGAAIAAgAAAAAAAAAGAAMAAgAAAAAAAAAGAAQAAgAAAAAAAAAFAAMAAgAAAAAAAAAFAAQAAgAAAAAAAAAEAAMAAgAAAAAAAAAEAAQAAgAAAAAAAAADAAMAAgAAAAAAAAADAAQAAgAAAAAAAAACAAQAAgAAAAAAAAABAAMAAgAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAIAAUAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAIAAMAAAAAAAAAAAAIAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAIAAEAAAAAAAAAAAAJAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAIAP//AAAAAAAAAAAHAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAADAAYAAAAAAAAAAAACAAYAAAAAAAAAAAABAAYAAAAAAAAAAAAAAP//AAAAAAAAAAABAP//AAAAAAAAAAACAP//AAAAAAAAAAADAP//AAAAAAAAAAAEAP//AAAAAAAAAAAFAP//AAAAAAAAAAAGAP//AAAAAAAAAAAHAP//AAAAAAAAAAAHAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADAAAAAAAAAAAAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAHAAIAAAAAAAAAAAAHAAMAAAAAAAAAAAAHAAQAAAAAAAAAAAAHAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAEAAUAAAAAAAAAAAADAAUAAAAAAAAAAAACAAUAAAAAAAAAAAABAAUAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAQAAAAAAAAAAAAAAAMAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAGAAQAAAAAAAAAAAAFAAMAAAAAAAAAAAAFAAQAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAACAAQAAAAAAAAAAAABAAMAAAAAAAAAAAA=")
 tile_set = SubResource("TileSet_c7dyn")
+metadata/_edit_lock_ = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_etqu2")
+[node name="Background" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.75, 0.75)
+repeat_size = Vector2(1152, 766)
+repeat_times = 3
+metadata/_edit_lock_ = true
+
+[node name="Background" type="TileMapLayer" parent="Background"]
+z_index = -6
+tile_map_data = PackedByteArray("AAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAIAAUAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAIAAMAAAAAAAAAAAAIAAIAAAAAAAAAAAAJAAIAAAAAAAAAAAAIAAEAAAAAAAAAAAAJAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAIAP//AAAAAAAAAAAHAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAADAAYAAAAAAAAAAAACAAYAAAAAAAAAAAABAAYAAAAAAAAAAAAAAP//AAAAAAAAAAABAP//AAAAAAAAAAACAP//AAAAAAAAAAADAP//AAAAAAAAAAAEAP//AAAAAAAAAAAFAP//AAAAAAAAAAAGAP//AAAAAAAAAAAHAP//AAAAAAAAAAAHAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAADAAAAAAAAAAAAAAACAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAEAAAAAAAAAAAACAAEAAAAAAAAAAAADAAEAAAAAAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAAAAAAAAAAHAAIAAAAAAAAAAAAHAAMAAAAAAAAAAAAHAAQAAAAAAAAAAAAHAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAEAAUAAAAAAAAAAAADAAUAAAAAAAAAAAACAAUAAAAAAAAAAAABAAUAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAQAAAAAAAAAAAAAAAMAAAAAAAAAAAABAAIAAAAAAAAAAAACAAIAAAAAAAAAAAACAAMAAAAAAAAAAAADAAIAAAAAAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAGAAMAAAAAAAAAAAAGAAQAAAAAAAAAAAAFAAMAAAAAAAAAAAAFAAQAAAAAAAAAAAAEAAMAAAAAAAAAAAAEAAQAAAAAAAAAAAADAAMAAAAAAAAAAAADAAQAAAAAAAAAAAACAAQAAAAAAAAAAAABAAMAAAAAAAAAAAA=")
+tile_set = SubResource("TileSet_xdh4e")
+metadata/_edit_lock_ = true
+
+[node name="Enemies" type="Node" parent="."]
+
+[node name="BasicEnemy" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(512, 0)
+
+[node name="BasicEnemy2" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(832, 0)
+
+[node name="BasicEnemy3" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(1152, 0)
+
+[node name="BasicEnemy5" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(928, -400)
+
+[node name="BasicEnemy6" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(320, -416)
+
+[node name="BasicEnemy4" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(192, 0)
+
+[node name="BasicEnemy7" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(-696, -32)
+
+[node name="BasicEnemy10" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(-1352, -16)
+
+[node name="BasicEnemy8" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(-984, -384)
+
+[node name="BasicEnemy9" parent="Enemies" instance=ExtResource("5_ifaiv")]
+position = Vector2(-400, -432)

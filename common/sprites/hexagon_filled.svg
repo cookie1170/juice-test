@@ -8,7 +8,7 @@
    version="1.1"
    id="svg1"
    inkscape:version="1.4 (86a8ad7, 2024-10-11)"
-   sodipodi:docname="test.svg"
+   sodipodi:docname="hexagon_filled.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="px"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="20.32932"
-     inkscape:cy="99.525279"
+     inkscape:zoom="4"
+     inkscape:cx="10.625"
+     inkscape:cy="62.625001"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
@@ -41,7 +41,7 @@
      id="layer1">
     <path
        sodipodi:type="star"
-       style="fill:none;fill-opacity:0.501493;stroke:#ffffff;stroke-width:15.515;stroke-linecap:round"
+       style="fill:#1a1a24;fill-opacity:1;stroke:#1e1e2b;stroke-width:15.515;stroke-linecap:round;stroke-opacity:1"
        id="path3"
        inkscape:flatsided="true"
        sodipodi:sides="6"
@@ -54,6 +54,6 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="m 125.69364,28.38116 0,71.237679 L 64,135.23768 2.3063608,99.61884 2.3063605,28.381161 64,-7.2376785 Z"
-       transform="matrix(0.92151326,0,0,0.79805025,5.0232975,12.924858)" />
+       transform="matrix(0.92151326,0,0,0.81118057,5.0231514,12.084443)" />
   </g>
 </svg>

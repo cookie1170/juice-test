@@ -12,8 +12,8 @@
 [ext_resource type="Script" uid="uid://d0dcgwjybsqd6" path="res://common/hitbox.gd" id="8_hg6s5"]
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="8_rgyib"]
 [ext_resource type="PackedScene" uid="uid://c3m2m678oe1bj" path="res://player/ghost_clone.tscn" id="9_yllr7"]
-[ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://common/circle.svg" id="11_2ieo8"]
-[ext_resource type="Texture2D" uid="uid://w3fx0ky4iuet" path="res://common/circle_higher_res.svg" id="14_wodsf"]
+[ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://common/sprites/circle.svg" id="11_2ieo8"]
+[ext_resource type="Texture2D" uid="uid://w3fx0ky4iuet" path="res://common/sprites/circle_higher_res.svg" id="14_wodsf"]
 [ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="15_32hag"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_sh265"]
@@ -195,6 +195,7 @@ dash_time = 0.2
 top_speed = 640.0
 air_accel_mult = 0.25
 air_decel_mult = 0.25
+zoom_amount_on_hit = 1.25
 offset_amount = Vector2(384, 128)
 hang_timer = NodePath("HangTimer")
 offset_timer = NodePath("OffsetTimer")

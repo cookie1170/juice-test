@@ -2,7 +2,8 @@ extends State
 
 @export_group("Variables")
 @export var clone_amount: int = 2
-@export var vignette_dist: float = 100.0
+@export_range(0.0, 512.0, 1.0, "or_greater") var vignette_dist: float = 100.0
+@export_range(0.0, 1.5, 0.05, "or_greater") var zoom_amount: float = 1.1
 @export_group("Nodes")
 @export var grounded_state: State
 @export var falling_state: State
@@ -16,6 +17,7 @@ var vel_tween: Tween
 var time_tween: Tween
 var scale_tween: Tween
 var color_tween: Tween
+var zoom_tween: Tween
 var has_pressed: bool = false
 var points: PackedVector2Array
 var clones_spawned: int
@@ -32,7 +34,7 @@ func enter(_previous_state: State = null) -> void:
 	if time_tween:
 		time_tween.kill()
 	Vignette.fade_vignette(vignette_dist, 0.25, 1)
-	time_tween = get_tree().create_tween()
+	time_tween = get_tree().create_tween().set_ignore_time_scale()
 	time_tween.tween_property(Engine, "time_scale", 0.25, 0.25)
 
 
@@ -76,17 +78,30 @@ func dash() -> void:
 		color_tween.kill()
 	if owner.hit_flash_tween:
 		owner.hit_flash_tween.kill()
+	if zoom_tween:
+		zoom_tween.kill()
+	zoom_tween = get_tree().create_tween()
 	scale_tween = get_tree().create_tween()
 	scale_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	color_tween = get_tree().create_tween().set_parallel()
 	color_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	Vignette.fade_vignette(vignette_dist, 0.25, 0)
+	Hitstop.hitstop(0.05)
 	owner.mesh.scale.x = 2.0
 	owner.mesh.scale.y = 0.5
 	owner.mesh.modulate = Color.CRIMSON
 	owner.trail.default_color = Color.CRIMSON
+	owner.bg_highlight.modulate = Color.CRIMSON
 	owner.mesh.rotation = owner.velocity.angle()
+	zoom_tween.tween_method(func(value: float):
+		owner.phantom_camera.set_zoom(Vector2(value, value)),
+		1.0, zoom_amount, 0.1)
+	zoom_tween.tween_method(func(value: float):
+		owner.phantom_camera.set_zoom(Vector2(value, value)),
+		zoom_amount, 1.0, 0.2)
 	color_tween.tween_property(owner.mesh, "modulate", Color.WHITE, 0.5)
+	color_tween.tween_property(owner.bg_highlight, "modulate",
+	Color.html("82f9ffff"), 0.5)
 	color_tween.tween_property(owner.trail, "default_color", Color.WHITE, 0.5)
 	scale_tween.tween_property(owner.mesh, "scale", Vector2(1.0, 1.0), 0.5)
 	clones_spawned = 0
@@ -100,12 +115,13 @@ func dash() -> void:
 	if vel_tween:
 		vel_tween.kill()
 	vel_tween = get_tree().create_tween()
-	vel_tween.tween_property(owner, "velocity", Vector2.ZERO.lerp(owner.velocity, 0.5), owner.dash_time)
+	vel_tween.tween_property(owner, "velocity",
+	Vector2.ZERO.lerp(owner.velocity, 0.5), owner.dash_time)
 	vel_tween.tween_callback(func(): state_changed.emit(
 		grounded_state if owner.is_on_floor() else falling_state
 	))
-	owner.phantom_camera.noise.amplitude = 24.0
-	owner.phantom_camera.noise.frequency = 1.0
+	owner.phantom_camera.noise.amplitude = 32.0
+	owner.phantom_camera.noise.frequency = 1.5
 	owner.phantom_camera.noise.positional_noise = true
 	await get_tree().create_timer(0.1).timeout
 	owner.phantom_camera.noise.positional_noise = false

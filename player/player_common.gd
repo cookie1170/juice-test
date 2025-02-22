@@ -21,6 +21,7 @@ extends CharacterBody2D
 @export_range(0.0, 1.0, 0.05) var air_decel_mult: float = 0.5
 @export_group("Camera Settings")
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var offset_time: float = 0.25
+@export_range(0.0, 1.5, 0.05, "or_greater") var zoom_amount_on_hit: float = 1.1
 @export var offset_amount: Vector2 = Vector2(384.0, 0.0)
 
 #endregion
@@ -36,6 +37,7 @@ extends CharacterBody2D
 @export var hurt_particles_1: GPUParticles2D
 @export var hurt_particles_2: GPUParticles2D
 @export var trail: Line2D
+@export var bg_highlight: TileMapLayer
 @export var dash_hitbox: Hitbox
 @export var hurtbox: Hurtbox
 @export var state_machine: StateMachine
@@ -63,6 +65,7 @@ extends CharacterBody2D
 var is_dashing: bool = false
 var cam_offset_tween: Tween
 var hit_flash_tween: Tween
+var zoom_tween: Tween
 var final_offset: Vector2
 var is_cam_tweening: bool
 var move_direction: float
@@ -152,7 +155,8 @@ func handle_mesh_rotation() -> void:
 
 
 func get_hit(hitbox: Hitbox) -> void:
-	var hit_direction: Vector2 = -global_position.direction_to(hitbox.global_position)
+	var hit_direction: Vector2 = -global_position. \
+	direction_to(hitbox.global_position)
 	hit_direction.y = clampf(hit_direction.y, -1, -0.2)
 	var hit_angle: float = hit_direction.angle()
 	velocity = hit_direction * 1024
@@ -161,19 +165,34 @@ func get_hit(hitbox: Hitbox) -> void:
 		hit_flash_tween.kill()
 	if dashing_state.color_tween:
 		dashing_state.color_tween.kill()
+	Vignette.fade_vignette(128.0, 0.1, 1)
+	Hitstop.hitstop(0.2)
+	await get_tree().create_timer(0.2, true, false, true).timeout
 	var time_tween: Tween = get_tree().create_tween().set_ignore_time_scale()
 	hit_flash_tween = get_tree().create_tween().set_ignore_time_scale()
 	hit_flash_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	hit_flash_tween.set_parallel()
+	hit_flash_tween.tween_property(bg_highlight, "modulate",
+	Color.CRIMSON, 0.05)
 	hit_flash_tween.tween_property(mesh, "modulate", Color.CRIMSON, 0.05)
-	hit_flash_tween.tween_property(mesh, "modulate", Color.WHITE, 0.5).set_delay(0.1)
+	hit_flash_tween.tween_property(bg_highlight, "modulate",
+	Color.html("82f9ffff"), 0.5).set_delay(0.15)
+	hit_flash_tween.tween_property(mesh, "modulate",
+	Color.WHITE, 0.5).set_delay(0.15)
 	time_tween.tween_property(Engine, "time_scale", 0.1, 0.1)
 	time_tween.tween_property(Engine, "time_scale", 1.0, 0.75)
 	hurt_particles_1.rotation = hit_angle
 	hurt_particles_2.rotation = hit_angle
-	phantom_camera.noise.amplitude = 64.0
-	phantom_camera.noise.frequency = 2.0
+	phantom_camera.noise.amplitude = 96.0
+	phantom_camera.noise.frequency = 3.0
 	phantom_camera.noise.positional_noise = true
-	Vignette.fade_vignette(128.0, 0.1, 1)
+	zoom_tween = get_tree().create_tween().set_ignore_time_scale()
+	zoom_tween.tween_method(func(value: float):
+		phantom_camera.set_zoom(Vector2(value, value)),
+		1.0, zoom_amount_on_hit, 0.1)
+	zoom_tween.tween_method(func(value: float):
+		phantom_camera.set_zoom(Vector2(value, value)),
+		zoom_amount_on_hit, 1.0, 0.2)
 	await get_tree().create_timer(0.15, true, false, true).timeout
 	hurt_particles_1.restart()
 	hurt_particles_2.restart()
@@ -186,9 +205,10 @@ func on_hit(_hurtbox: Hurtbox) -> void:
 	if Input.is_action_pressed("bounce"):
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
-	phantom_camera.noise.amplitude = 16.0
-	phantom_camera.noise.frequency = 1.0
+	phantom_camera.noise.amplitude = 24.0
+	phantom_camera.noise.frequency = 1.5
 	phantom_camera.noise.positional_noise = true
+	Hitstop.hitstop()
 	await get_tree().create_timer(0.1).timeout
 	phantom_camera.noise.positional_noise = false
 
