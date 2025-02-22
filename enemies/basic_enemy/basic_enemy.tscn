@@ -1,9 +1,27 @@
-[gd_scene load_steps=8 format=3 uid="uid://517hm5oeryf5"]
+[gd_scene load_steps=27 format=3 uid="uid://517hm5oeryf5"]
 
 [ext_resource type="Script" uid="uid://cbfqmuc1jq41h" path="res://enemies/basic_enemy/basic_enemy.gd" id="1_lbl0g"]
+[ext_resource type="Shader" uid="uid://dw02enehvmrt2" path="res://common/dissolve.gdshader" id="2_m6spd"]
 [ext_resource type="Texture2D" uid="uid://36d1vc5qw3wa" path="res://icon.svg" id="2_yx0l5"]
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="3_eopwh"]
 [ext_resource type="Script" uid="uid://d0dcgwjybsqd6" path="res://common/hitbox.gd" id="4_xuk7h"]
+[ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://player/circle.svg" id="6_u66kj"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_m6spd"]
+seed = 455
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u66kj"]
+width = 128
+height = 128
+noise = SubResource("FastNoiseLite_m6spd")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fwb20"]
+resource_local_to_scene = true
+shader = ExtResource("2_m6spd")
+shader_parameter/amount = 0.0
+shader_parameter/burn_edge_size = 0.1
+shader_parameter/burn_edge_color = Color(0.862745, 0.0784314, 0.235294, 1)
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_u66kj")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_yx0l5"]
 radius = 64.0
@@ -14,16 +32,94 @@ radius = 88.3629
 [sub_resource type="CircleShape2D" id="CircleShape2D_m6spd"]
 radius = 48.0
 
-[node name="BasicEnemy" type="CharacterBody2D" node_paths=PackedStringArray("update_timer")]
+[sub_resource type="Gradient" id="Gradient_fwb20"]
+colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 0.986274, 0.907843, 0.923529, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_wodsf"]
+gradient = SubResource("Gradient_fwb20")
+
+[sub_resource type="Curve" id="Curve_hpkks"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 100), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tqiix"]
+curve = SubResource("Curve_hpkks")
+
+[sub_resource type="Curve" id="Curve_rutms"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(0.8, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_c35mf"]
+curve = SubResource("Curve_rutms")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_wf1kn"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+spread = 30.0
+initial_velocity_min = 514.7
+initial_velocity_max = 544.11
+gravity = Vector3(0, 0, 0)
+damping_min = 8.0
+damping_max = 8.0
+damping_curve = SubResource("CurveTexture_tqiix")
+scale_min = 0.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_c35mf")
+color_ramp = SubResource("GradientTexture1D_wodsf")
+
+[sub_resource type="Gradient" id="Gradient_2ieo8"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_svadl"]
+gradient = SubResource("Gradient_2ieo8")
+width = 8
+height = 32
+
+[sub_resource type="Gradient" id="Gradient_avyl3"]
+colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 1, 1, 1, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_32hag"]
+gradient = SubResource("Gradient_avyl3")
+
+[sub_resource type="Curve" id="Curve_harik"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_e7oew"]
+curve = SubResource("Curve_harik")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7v5ht"]
+lifetime_randomness = 0.5
+particle_flag_align_y = true
+particle_flag_disable_z = true
+spread = 25.0
+initial_velocity_min = 372.55
+initial_velocity_max = 416.67
+gravity = Vector3(0, 98, 0)
+scale_curve = SubResource("CurveTexture_e7oew")
+color_ramp = SubResource("GradientTexture1D_32hag")
+
+[node name="BasicEnemy" type="CharacterBody2D" node_paths=PackedStringArray("update_timer", "sprite", "hurt_particles1", "hurt_particles2", "hurtbox", "hitbox")]
 collision_layer = 0
 script = ExtResource("1_lbl0g")
 update_timer = NodePath("UpdateTimer")
+sprite = NodePath("Sprite")
+hurt_particles1 = NodePath("HurtParticles")
+hurt_particles2 = NodePath("HurtParticles2")
+hurtbox = NodePath("Hurtbox")
+hitbox = NodePath("Hitbox")
 
 [node name="UpdateTimer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
 
 [node name="Sprite" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_fwb20")
 position = Vector2(0, -64)
 texture = ExtResource("2_yx0l5")
 
@@ -48,5 +144,25 @@ metadata/_custom_type_script = "uid://d0dcgwjybsqd6"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 shape = SubResource("CircleShape2D_m6spd")
 debug_color = Color(0.7, 0, 0, 0.419608)
+
+[node name="HurtParticles" type="GPUParticles2D" parent="."]
+position = Vector2(0, -64)
+emitting = false
+amount = 16
+texture = ExtResource("6_u66kj")
+one_shot = true
+explosiveness = 0.9
+randomness = 0.4
+process_material = SubResource("ParticleProcessMaterial_wf1kn")
+
+[node name="HurtParticles2" type="GPUParticles2D" parent="."]
+show_behind_parent = true
+position = Vector2(0, -64)
+emitting = false
+texture = SubResource("GradientTexture2D_svadl")
+one_shot = true
+explosiveness = 0.85
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_7v5ht")
 
 [connection signal="timeout" from="UpdateTimer" to="." method="_on_update"]

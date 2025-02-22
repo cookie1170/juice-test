@@ -7,15 +7,37 @@ extends CharacterBody2D
 @export_range(0.0, 4096.0, 1.0, "or_greater", "suffix:px") var notice_range: float = 2048.0
 @export_group("Nodes")
 @export var update_timer: Timer
+@export var sprite: Sprite2D
+@export var hurt_particles1: GPUParticles2D
+@export var hurt_particles2: GPUParticles2D
+@export var hurtbox: Hurtbox
+@export var hitbox: Hitbox
 
 #endregion
+
+var dissolve_tween: Tween
+
 
 func _physics_process(_delta: float) -> void:
 	pass
 
 
-func get_hit(_hitbox: Hitbox):
-	queue_free()
+func get_hit(attack_hitbox: Hitbox):
+	hurtbox.monitoring = false
+	hitbox.monitorable = false
+	var hit_angle: float = (
+			attack_hitbox.owner.velocity.angle() if attack_hitbox.owner is CharacterBody2D
+			else -global_position.direction_to(attack_hitbox.global_positon).angle()
+	)
+	hurt_particles1.rotation = hit_angle
+	hurt_particles2.rotation = hit_angle
+	hurt_particles1.restart()
+	hurt_particles2.restart()
+	dissolve_tween = get_tree().create_tween()
+	dissolve_tween.tween_method(func(value: float):
+		sprite.material.set_shader_parameter("amount", value),
+	0.0, 1.0, 0.25)
+	dissolve_tween.tween_callback(queue_free).set_delay(0.75)
 
 
 func _on_update() -> void:

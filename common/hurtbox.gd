@@ -20,7 +20,7 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if not i_frame_timer.is_stopped():
+	if not i_frame_timer.is_stopped() or not monitoring:
 		return
 	if has_overlapping_areas():
 		for area: Hitbox in get_overlapping_areas():

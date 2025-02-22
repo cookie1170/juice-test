@@ -74,13 +74,13 @@ scale_max = 1.5
 scale_curve = SubResource("CurveTexture_yllr7")
 color_ramp = SubResource("GradientTexture1D_yllr7")
 
-[sub_resource type="Gradient" id="Gradient_2ieo8"]
+[sub_resource type="Gradient" id="Gradient_32hag"]
 offsets = PackedFloat32Array(1)
 colors = PackedColorArray(1, 1, 1, 1)
 metadata/_snap_enabled = true
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_ebec5"]
-gradient = SubResource("Gradient_2ieo8")
+gradient = SubResource("Gradient_32hag")
 width = 8
 height = 32
 
@@ -114,7 +114,7 @@ offsets = PackedFloat32Array(0, 0.5)
 colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 0.986274, 0.907843, 0.923529, 1)
 metadata/_snap_enabled = true
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_wodsf"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_tqiix"]
 gradient = SubResource("Gradient_kb6p2")
 
 [sub_resource type="Curve" id="Curve_32hag"]
@@ -122,7 +122,7 @@ _limits = [0.0, 100.0, 0.0, 1.0]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 100), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_tqiix"]
+[sub_resource type="CurveTexture" id="CurveTexture_e7oew"]
 curve = SubResource("Curve_32hag")
 
 [sub_resource type="Curve" id="Curve_e7oew"]
@@ -140,25 +140,25 @@ initial_velocity_max = 333.33
 gravity = Vector3(0, 0, 0)
 damping_min = 8.0
 damping_max = 8.0
-damping_curve = SubResource("CurveTexture_tqiix")
+damping_curve = SubResource("CurveTexture_e7oew")
 scale_min = 0.5
 scale_max = 1.5
 scale_curve = SubResource("CurveTexture_c35mf")
-color_ramp = SubResource("GradientTexture1D_wodsf")
+color_ramp = SubResource("GradientTexture1D_tqiix")
 
 [sub_resource type="Gradient" id="Gradient_wodsf"]
 offsets = PackedFloat32Array(0, 0.5)
 colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 1, 1, 1, 1)
 metadata/_snap_enabled = true
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_32hag"]
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_65viv"]
 gradient = SubResource("Gradient_wodsf")
 
 [sub_resource type="Curve" id="Curve_tqiix"]
 _data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_e7oew"]
+[sub_resource type="CurveTexture" id="CurveTexture_x7c3f"]
 curve = SubResource("Curve_tqiix")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_c35mf"]
@@ -169,8 +169,8 @@ spread = 25.0
 initial_velocity_min = 367.65
 initial_velocity_max = 411.77
 gravity = Vector3(0, 98, 0)
-scale_curve = SubResource("CurveTexture_e7oew")
-color_ramp = SubResource("GradientTexture1D_32hag")
+scale_curve = SubResource("CurveTexture_x7c3f")
+color_ramp = SubResource("GradientTexture1D_65viv")
 
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "offset_timer", "dash_attack_timer", "mesh", "dash_particles", "hurt_particles_1", "hurt_particles_2", "trail", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
 physics_interpolation_mode = 1
@@ -334,6 +334,7 @@ debug_color = Color(1, 0.16, 0.16, 0.419608)
 
 [node name="DashParticles" type="GPUParticles2D" parent="."]
 physics_interpolation_mode = 1
+visible = false
 show_behind_parent = true
 position = Vector2(0, -24)
 emitting = false
@@ -346,6 +347,7 @@ fixed_fps = 60
 process_material = SubResource("ParticleProcessMaterial_ebec5")
 
 [node name="DashParticles2" type="GPUParticles2D" parent="."]
+visible = false
 show_behind_parent = true
 position = Vector2(0, -24)
 emitting = false
