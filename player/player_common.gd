@@ -186,6 +186,11 @@ func on_hit(_hurtbox: Hurtbox) -> void:
 	if Input.is_action_pressed("bounce"):
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
+	phantom_camera.noise.amplitude = 16.0
+	phantom_camera.noise.frequency = 1.0
+	phantom_camera.noise.positional_noise = true
+	await get_tree().create_timer(0.1).timeout
+	phantom_camera.noise.positional_noise = false
 
 
 func _on_offset_timeout() -> void:
