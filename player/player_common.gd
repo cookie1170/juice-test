@@ -33,6 +33,8 @@ extends CharacterBody2D
 @export var dash_attack_timer: Timer
 @export var mesh: MeshInstance2D
 @export var dash_particles: GPUParticles2D
+@export var hurt_particles_1: GPUParticles2D
+@export var hurt_particles_2: GPUParticles2D
 @export var trail: Line2D
 @export var dash_hitbox: Hitbox
 @export var hurtbox: Hurtbox
@@ -60,6 +62,7 @@ extends CharacterBody2D
 
 var is_dashing: bool = false
 var cam_offset_tween: Tween
+var hit_flash_tween: Tween
 var final_offset: Vector2
 var is_cam_tweening: bool
 var move_direction: float
@@ -93,6 +96,7 @@ func apply_gravity(delta_time: float, gravity: float) -> void:
 
 
 func handle_movement(delta_time: float) -> void:
+	Vignette.pos = phantom_camera.to_local(mesh.global_position)
 	if state_machine.current_state == dashing_state:
 		move_direction = signf(velocity.x)
 		return
@@ -148,20 +152,40 @@ func handle_mesh_rotation() -> void:
 
 
 func get_hit(hitbox: Hitbox) -> void:
-	velocity = -global_position.direction_to(hitbox.global_position) * 1024
-	if is_on_floor():
-		state_machine.change_state(bouncing_state)
+	var hit_direction: Vector2 = -global_position.direction_to(hitbox.global_position)
+	hit_direction.y = clampf(hit_direction.y, -1, -0.2)
+	var hit_angle: float = hit_direction.angle()
+	velocity = hit_direction * 1024
+	state_machine.change_state(bouncing_state)
+	if hit_flash_tween:
+		hit_flash_tween.kill()
+	if dashing_state.color_tween:
+		dashing_state.color_tween.kill()
 	var time_tween: Tween = get_tree().create_tween().set_ignore_time_scale()
+	hit_flash_tween = get_tree().create_tween().set_ignore_time_scale()
+	hit_flash_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
+	hit_flash_tween.tween_property(mesh, "modulate", Color.CRIMSON, 0.05)
+	hit_flash_tween.tween_property(mesh, "modulate", Color.WHITE, 0.5).set_delay(0.1)
 	time_tween.tween_property(Engine, "time_scale", 0.1, 0.1)
 	time_tween.tween_property(Engine, "time_scale", 1.0, 0.75)
-	print_debug("player hit")
+	hurt_particles_1.rotation = hit_angle
+	hurt_particles_2.rotation = hit_angle
+	phantom_camera.noise.amplitude = 64.0
+	phantom_camera.noise.frequency = 2.0
+	phantom_camera.noise.positional_noise = true
+	Vignette.fade_vignette(100.0, 0.1, 1)
+	await get_tree().create_timer(0.15, true, false, true).timeout
+	hurt_particles_1.restart()
+	hurt_particles_2.restart()
+	await get_tree().create_timer(0.2, true, false, true).timeout
+	phantom_camera.noise.positional_noise = false
+	Vignette.fade_vignette(100.0, 0.35, 0)
 
 
 func on_hit(_hurtbox: Hurtbox) -> void:
 	if Input.is_action_pressed("bounce"):
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
-	print_debug("enemy hit")
 
 
 func _on_offset_timeout() -> void:

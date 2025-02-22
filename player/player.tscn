@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://lj17m112ehpt"]
+[gd_scene load_steps=46 format=3 uid="uid://lj17m112ehpt"]
 
 [ext_resource type="Script" uid="uid://c08p2djcihe2o" path="res://player/player_common.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://ck2pawb0jmb51" path="res://player/dash_dir_indicator.gd" id="2_8t03j"]
@@ -109,7 +109,70 @@ gravity = Vector3(0, 98, 0)
 scale_curve = SubResource("CurveTexture_kb6p2")
 color_ramp = SubResource("GradientTexture1D_kb6p2")
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "offset_timer", "dash_attack_timer", "mesh", "dash_particles", "trail", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
+[sub_resource type="Gradient" id="Gradient_kb6p2"]
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 0.986274, 0.907843, 0.923529, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_wodsf"]
+gradient = SubResource("Gradient_kb6p2")
+
+[sub_resource type="Curve" id="Curve_32hag"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 100), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_tqiix"]
+curve = SubResource("Curve_32hag")
+
+[sub_resource type="Curve" id="Curve_e7oew"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(0.8, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_c35mf"]
+curve = SubResource("Curve_e7oew")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_65viv"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+initial_velocity_min = 303.92
+initial_velocity_max = 333.33
+gravity = Vector3(0, 0, 0)
+damping_min = 8.0
+damping_max = 8.0
+damping_curve = SubResource("CurveTexture_tqiix")
+scale_min = 0.5
+scale_max = 1.5
+scale_curve = SubResource("CurveTexture_c35mf")
+color_ramp = SubResource("GradientTexture1D_wodsf")
+
+[sub_resource type="Gradient" id="Gradient_wodsf"]
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 1, 1, 1, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_32hag"]
+gradient = SubResource("Gradient_wodsf")
+
+[sub_resource type="Curve" id="Curve_tqiix"]
+_data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_e7oew"]
+curve = SubResource("Curve_tqiix")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_c35mf"]
+lifetime_randomness = 0.5
+particle_flag_align_y = true
+particle_flag_disable_z = true
+spread = 25.0
+initial_velocity_min = 367.65
+initial_velocity_max = 411.77
+gravity = Vector3(0, 98, 0)
+scale_curve = SubResource("CurveTexture_e7oew")
+color_ramp = SubResource("GradientTexture1D_32hag")
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "offset_timer", "dash_attack_timer", "mesh", "dash_particles", "hurt_particles_1", "hurt_particles_2", "trail", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
 physics_interpolation_mode = 1
 script = ExtResource("1_4flbx")
 peak_time = 0.45
@@ -127,6 +190,8 @@ offset_timer = NodePath("OffsetTimer")
 dash_attack_timer = NodePath("DashAttackTimer")
 mesh = NodePath("Mesh")
 dash_particles = NodePath("DashParticles")
+hurt_particles_1 = NodePath("HurtParticles")
+hurt_particles_2 = NodePath("HurtParticles2")
 trail = NodePath("Trail")
 dash_hitbox = NodePath("DashHitbox")
 hurtbox = NodePath("Hurtbox")
@@ -215,6 +280,7 @@ hang_timer = NodePath("../../HangTimer")
 metadata/_custom_type_script = "uid://d3mvxnoga10c0"
 
 [node name="Dashing" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("grounded_state", "falling_state", "clone_timer", "dash_indicator", "dash_particles_1", "dash_particles_2")]
+visible = false
 script = ExtResource("5_qjkh3")
 clone_amount = 5
 grounded_state = NodePath("../Grounded")
@@ -289,6 +355,26 @@ one_shot = true
 explosiveness = 0.5
 randomness = 0.5
 process_material = SubResource("ParticleProcessMaterial_wodsf")
+
+[node name="HurtParticles" type="GPUParticles2D" parent="."]
+position = Vector2(0, -24)
+emitting = false
+amount = 16
+texture = ExtResource("11_2ieo8")
+one_shot = true
+explosiveness = 0.9
+randomness = 0.4
+process_material = SubResource("ParticleProcessMaterial_65viv")
+
+[node name="HurtParticles2" type="GPUParticles2D" parent="."]
+show_behind_parent = true
+position = Vector2(0, -24)
+emitting = false
+texture = SubResource("GradientTexture2D_ebec5")
+one_shot = true
+explosiveness = 0.85
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_c35mf")
 
 [connection signal="timeout" from="OffsetTimer" to="." method="_on_offset_timeout"]
 [connection signal="timeout" from="Trail/TrailTimer" to="Trail" method="_timeout"]

@@ -11,7 +11,7 @@ func fade_vignette(dist: float, time: float, type = 1) -> void:
 	material.set_shader_parameter("size", size)
 	if tween:
 		tween.kill()
-	tween = get_tree().create_tween()
+	tween = get_tree().create_tween().set_ignore_time_scale()
 	match type:
 		0:
 			tween.tween_method(func(value: float):

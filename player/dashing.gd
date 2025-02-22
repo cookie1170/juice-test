@@ -42,7 +42,7 @@ func exit() -> void:
 		vel_tween.kill()
 	if time_tween:
 		time_tween.kill()
-	Vignette.fade_vignette(vignette_dist, 0.25, 0)
+	Vignette.fade_vignette(vignette_dist, 0.5, 0)
 	dash_particles_1.emitting = false
 	dash_particles_2.emitting = false
 	dash_indicator.change_visible(false)
@@ -52,7 +52,6 @@ func exit() -> void:
 func _physics_process(delta: float) -> void:
 	if Input.is_action_pressed("dash") and not has_pressed:
 		owner.velocity.y -= owner.fall_grav * delta
-		Vignette.pos = owner.phantom_camera.to_local(owner.mesh.global_position)
 		if Input.is_action_just_pressed("abort_dash"):
 			state_changed.emit(falling_state)
 	if Input.is_action_just_released("dash"):
@@ -75,6 +74,8 @@ func dash() -> void:
 		scale_tween.kill()
 	if color_tween:
 		color_tween.kill()
+	if owner.hit_flash_tween:
+		owner.hit_flash_tween.kill()
 	scale_tween = get_tree().create_tween()
 	scale_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	color_tween = get_tree().create_tween().set_parallel()
