@@ -1,10 +1,15 @@
 extends State
 
+@export_group("Variables")
+@export var clone_amount: int = 2
+@export_group("Nodes")
 @export var grounded_state: State
 @export var falling_state: State
+@export var clone_timer: Timer
 @export var dash_indicator: Line2D
 @export var dash_particles_1: GPUParticles2D
 @export var dash_particles_2: GPUParticles2D
+@export var clone_scene: PackedScene
 
 var vel_tween: Tween
 var time_tween: Tween
@@ -12,6 +17,12 @@ var scale_tween: Tween
 var color_tween: Tween
 var has_pressed: bool = false
 var points: PackedVector2Array
+var clones_spawned: int
+
+
+func _ready() -> void:
+	super()
+
 
 func enter(_previous_state: State = null) -> void:
 	super()
@@ -29,13 +40,13 @@ func exit() -> void:
 		vel_tween.kill()
 	if time_tween:
 		time_tween.kill()
-	if scale_tween:
-		scale_tween.kill()
-	if color_tween:
-		color_tween.kill()
-	owner.mesh.modulate = Color.WHITE
-	owner.trail.default_color = Color.WHITE
-	owner.mesh.scale = Vector2(1.0, 1.0)
+	#if scale_tween:
+		#scale_tween.kill()
+	#if color_tween:
+		#color_tween.kill()
+	#owner.mesh.modulate = Color.WHITE
+	#owner.trail.default_color = Color.WHITE
+	#owner.mesh.scale = Vector2(1.0, 1.0)
 	dash_particles_1.emitting = false
 	dash_particles_2.emitting = false
 	dash_indicator.change_visible(false)
@@ -70,14 +81,18 @@ func dash() -> void:
 	if color_tween:
 		color_tween.kill()
 	scale_tween = get_tree().create_tween()
+	scale_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	color_tween = get_tree().create_tween().set_parallel()
+	color_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	owner.mesh.scale.x = 2.0
 	owner.mesh.scale.y = 0.5
 	owner.mesh.modulate = Color.CRIMSON
 	owner.trail.default_color = Color.CRIMSON
 	color_tween.tween_property(owner.mesh, "modulate", Color.WHITE, 0.5)
 	color_tween.tween_property(owner.trail, "default_color", Color.WHITE, 0.5)
-	scale_tween.tween_property(owner.mesh, "scale", Vector2(1.0, 1.0), 0.25)
+	scale_tween.tween_property(owner.mesh, "scale", Vector2(1.0, 1.0), 0.5)
+	clones_spawned = 0
+	clone_spawn()
 	owner.dash_attack_timer.start()
 	owner.hurtbox.i_frame_timer.start(1.0)
 	if time_tween:
@@ -105,3 +120,13 @@ func get_dash_vel_mult() -> float:
 	distance_to(get_global_mouse_position()), 0, max_dist)
 	var remapped_dist: float = remap(clamp_dist, 0.0, max_dist, 0.5, 1.0)
 	return remapped_dist
+
+
+func clone_spawn() -> void:
+	var clone_instance: MeshInstance2D = clone_scene.instantiate()
+	owner.call_deferred("add_sibling", clone_instance)
+	clone_instance.global_position = owner.mesh.global_position
+	clone_instance.modulate = owner.mesh.modulate
+	clones_spawned += 1
+	if clones_spawned < clone_amount:
+		clone_timer.start()

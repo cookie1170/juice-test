@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://lj17m112ehpt"]
+[gd_scene load_steps=34 format=3 uid="uid://lj17m112ehpt"]
 
 [ext_resource type="Script" uid="uid://c08p2djcihe2o" path="res://player/player_common.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://ck2pawb0jmb51" path="res://player/dash_dir_indicator.gd" id="2_8t03j"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://ptnh2uj4vicw" path="res://player/state_display.gd" id="7_boad6"]
 [ext_resource type="Script" uid="uid://d0dcgwjybsqd6" path="res://common/hitbox.gd" id="8_hg6s5"]
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="8_rgyib"]
+[ext_resource type="PackedScene" uid="uid://c3m2m678oe1bj" path="res://player/ghost_clone.tscn" id="9_yllr7"]
 [ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://player/circle.svg" id="11_2ieo8"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_sh265"]
@@ -185,7 +186,7 @@ script = ExtResource("3_ebec5")
 default_point_amount = 25
 dash_attack_timer = NodePath("../DashAttackTimer")
 
-[node name="Timer" type="Timer" parent="Trail"]
+[node name="TrailTimer" type="Timer" parent="Trail"]
 wait_time = 0.015
 autostart = true
 
@@ -213,15 +214,22 @@ bouncing_state = NodePath("../Bouncing")
 hang_timer = NodePath("../../HangTimer")
 metadata/_custom_type_script = "uid://d3mvxnoga10c0"
 
-[node name="Dashing" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("grounded_state", "falling_state", "dash_indicator", "dash_particles_1", "dash_particles_2")]
-visible = false
+[node name="Dashing" type="Node2D" parent="StateMachine" node_paths=PackedStringArray("grounded_state", "falling_state", "clone_timer", "dash_indicator", "dash_particles_1", "dash_particles_2")]
 script = ExtResource("5_qjkh3")
+clone_amount = 5
 grounded_state = NodePath("../Grounded")
 falling_state = NodePath("../Falling")
+clone_timer = NodePath("CloneTimer")
 dash_indicator = NodePath("../../DashDirIndicator")
 dash_particles_1 = NodePath("../../DashParticles")
 dash_particles_2 = NodePath("../../DashParticles2")
+clone_scene = ExtResource("9_yllr7")
 metadata/_custom_type_script = "uid://d3mvxnoga10c0"
+
+[node name="CloneTimer" type="Timer" parent="StateMachine/Dashing"]
+process_mode = 1
+wait_time = 0.1
+one_shot = true
 
 [node name="StateLabel" type="Label" parent="." node_paths=PackedStringArray("state_machine")]
 visible = false
@@ -283,4 +291,5 @@ randomness = 0.5
 process_material = SubResource("ParticleProcessMaterial_wodsf")
 
 [connection signal="timeout" from="OffsetTimer" to="." method="_on_offset_timeout"]
-[connection signal="timeout" from="Trail/Timer" to="Trail" method="_timeout"]
+[connection signal="timeout" from="Trail/TrailTimer" to="Trail" method="_timeout"]
+[connection signal="timeout" from="StateMachine/Dashing/CloneTimer" to="StateMachine/Dashing" method="clone_spawn"]
