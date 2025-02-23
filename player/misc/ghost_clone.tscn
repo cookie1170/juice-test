@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c3m2m678oe1bj"]
 
-[ext_resource type="Script" uid="uid://b86j3amobfi3m" path="res://player/ghost_clone.gd" id="1_p6kxc"]
+[ext_resource type="Script" uid="uid://b86j3amobfi3m" path="res://player/misc/ghost_clone.gd" id="1_p6kxc"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_gft6u"]
 radius = 24.0

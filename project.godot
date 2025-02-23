@@ -19,10 +19,10 @@ config/icon="res://icon.svg"
 
 PhantomCameraManager="*res://addons/phantom_camera/scripts/managers/phantom_camera_manager.gd"
 Ref="*res://global/ref.gd"
-FullscreenManager="*res://common/fullscreen_manager.gd"
-Vignette="*res://common/vignette.tscn"
-Hitstop="*res://common/hitstop.gd"
-Shockwave="*res://common/shockwave.tscn"
+FullscreenManager="*res://global/fullscreen_manager.gd"
+Vignette="*res://global/vignette.tscn"
+Hitstop="*res://global/hitstop.gd"
+Shockwave="*res://global/shockwave.tscn"
 
 [display]
 

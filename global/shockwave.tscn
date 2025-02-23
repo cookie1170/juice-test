@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://4i5vg3vscncs"]
 
-[ext_resource type="Shader" uid="uid://1po2tubelwhn" path="res://common/shockwave.gdshader" id="1_anpj3"]
-[ext_resource type="Script" uid="uid://ipnyhwd6vd3m" path="res://common/shockwave.gd" id="1_l0mkl"]
-[ext_resource type="Script" uid="uid://de2c5rknq5n35" path="res://common/shockwave_rect.gd" id="3_l0mkl"]
+[ext_resource type="Shader" uid="uid://1po2tubelwhn" path="res://global/shockwave.gdshader" id="1_anpj3"]
+[ext_resource type="Script" uid="uid://ipnyhwd6vd3m" path="res://global/shockwave.gd" id="1_l0mkl"]
+[ext_resource type="Script" uid="uid://de2c5rknq5n35" path="res://global/shockwave_rect.gd" id="3_l0mkl"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jp5p0"]
 shader = ExtResource("1_anpj3")
