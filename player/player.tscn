@@ -342,6 +342,7 @@ visible = false
 script = ExtResource("5_qjkh3")
 clone_amount = 5
 vignette_dist = 128.0
+zoom_amount = 0.85
 dash_color = Color(1, 0.793333, 0.38, 1)
 grounded_state = NodePath("../Grounded")
 falling_state = NodePath("../Falling")
