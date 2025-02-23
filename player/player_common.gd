@@ -191,10 +191,10 @@ func get_hit(hitbox: Hitbox) -> void:
 	zoom_tween = get_tree().create_tween().set_ignore_time_scale()
 	zoom_tween.tween_method(func(value: float):
 		phantom_camera.set_zoom(Vector2(value, value)),
-		1.0, zoom_amount_on_hit, 0.1)
+		0.75, zoom_amount_on_hit, 0.1)
 	zoom_tween.tween_method(func(value: float):
 		phantom_camera.set_zoom(Vector2(value, value)),
-		zoom_amount_on_hit, 1.0, 0.2)
+		zoom_amount_on_hit, 0.75, 0.2)
 	await get_tree().create_timer(0.15, true, false, true).timeout
 	hurt_particles_1.restart()
 	hurt_particles_2.restart()
