@@ -211,9 +211,13 @@ color_ramp = SubResource("GradientTexture1D_65viv")
 resource_name = "light_follow"
 script/source = "extends PointLight2D
 
+var tween: Tween
 
-func _process(delta: float) -> void:
-	global_position = global_position.lerp(owner.global_position, clampf(10 * delta, 0.0, 1.0))
+func _process(_delta: float) -> void:
+	if tween:
+		tween.kill()
+	tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+	tween.tween_property(self, \"global_position\", owner.global_position, 0.2)
 "
 
 [sub_resource type="Gradient" id="Gradient_tqiix"]
@@ -227,7 +231,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "offset_timer", "dash_attack_timer", "mesh", "dash_particles", "hurt_particles_1", "hurt_particles_2", "wavedash_particle", "trail", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "dash_attack_timer", "mesh", "dash_particles", "hurt_particles_1", "hurt_particles_2", "wavedash_particle", "trail", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
 physics_interpolation_mode = 1
 script = ExtResource("1_4flbx")
 peak_time = 0.45
@@ -243,7 +247,6 @@ air_decel_mult = 0.25
 zoom_amount_on_hit = 1.0
 offset_amount = Vector2(384, 256)
 hang_timer = NodePath("HangTimer")
-offset_timer = NodePath("OffsetTimer")
 dash_attack_timer = NodePath("DashAttackTimer")
 mesh = NodePath("Mesh")
 dash_particles = NodePath("DashParticles")
@@ -268,11 +271,6 @@ mesh = SubResource("SphereMesh_sh265")
 position = Vector2(0, -24)
 shape = SubResource("CircleShape2D_sh265")
 
-[node name="OffsetTimer" type="Timer" parent="."]
-unique_name_in_owner = true
-wait_time = 0.25
-one_shot = true
-
 [node name="HangTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 wait_time = 0.05
@@ -283,7 +281,6 @@ unique_name_in_owner = true
 one_shot = true
 
 [node name="DashDirIndicator" type="Line2D" parent="." node_paths=PackedStringArray("mesh")]
-visible = false
 show_behind_parent = true
 top_level = true
 z_index = -1
@@ -448,7 +445,7 @@ position = Vector2(0, -24)
 energy = 0.5
 range_item_cull_mask = 2
 texture = ExtResource("14_wodsf")
-texture_scale = 0.5
+texture_scale = 0.75
 script = SubResource("GDScript_wodsf")
 metadata/_edit_lock_ = true
 
@@ -471,6 +468,5 @@ script = ExtResource("7_boad6")
 state_machine = NodePath("../StateMachine")
 metadata/_edit_lock_ = true
 
-[connection signal="timeout" from="OffsetTimer" to="." method="_on_offset_timeout"]
 [connection signal="timeout" from="Trail/TrailTimer" to="Trail" method="_timeout"]
 [connection signal="timeout" from="StateMachine/Dashing/CloneTimer" to="StateMachine/Dashing" method="clone_spawn"]

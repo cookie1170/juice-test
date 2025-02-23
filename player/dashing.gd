@@ -69,7 +69,7 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_pressed("bounce"):
 			if abs(owner.velocity.x) > owner.wavedash_threshold:
 				wavedash_particle.restart()
-				owner.shake(48.0, 2.0, 0.25)
+				owner.shake(64.0, 3.0, 0.35)
 				Hitstop.hitstop(0.2)
 				clones_spawned -= 2
 			state_changed.emit(bouncing_state)
@@ -138,7 +138,7 @@ func dash() -> void:
 	vel_tween.tween_callback(func(): state_changed.emit(
 		grounded_state if owner.is_on_floor() else falling_state
 	))
-	owner.shake(32.0, 1.5, 0.1)
+	owner.shake(48.0, 2.0, 0.2)
 
 
 func get_dash_vel_mult() -> float:

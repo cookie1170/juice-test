@@ -26,7 +26,6 @@ func change_visible(value: bool) -> void:
 			mult = 0.0
 			mult_tween.tween_property(self, "mult", 1.0, 0.1)
 		false:
-			show()
 			if mult_tween:
 				mult_tween.kill()
 			mult_tween = get_tree().create_tween().set_ignore_time_scale()

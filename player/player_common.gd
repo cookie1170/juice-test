@@ -31,7 +31,6 @@ extends CharacterBody2D
 
 @export_group("Nodes")
 @export var hang_timer: Timer
-@export var offset_timer: Timer
 @export var dash_attack_timer: Timer
 @export var mesh: MeshInstance2D
 @export var dash_particles: GPUParticles2D
@@ -89,7 +88,6 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	handle_movement(delta)
-	handle_cam_offset()
 	handle_dash_attack()
 	handle_mesh_rotation()
 	move_and_slide()
@@ -125,27 +123,6 @@ func handle_movement(delta_time: float) -> void:
 				not state_machine.current_state == grounded_state
 				else 1.0)
 		)
-
-
-func handle_cam_offset() -> void:
-	if cam_offset_tween:
-		cam_offset_tween.kill()
-	cam_offset_tween = get_tree().create_tween()
-	if (not velocity.x == 0.0 and not
-	final_offset.x == move_direction * offset_amount.x):
-		if offset_timer.is_stopped(): 
-			offset_timer.start()
-	else:
-		offset_timer.stop()
-	if velocity.x == 0.0:
-		offset_timer.stop()
-		final_offset.x = 0.0
-	if velocity.y >= 256.0:
-		final_offset.y = offset_amount.y
-	else:
-		final_offset.y = 0.0
-	cam_offset_tween.tween_method(phantom_camera.set_follow_offset,
-	phantom_camera.get_follow_offset(), final_offset, offset_time)
 
 
 func handle_dash_attack() -> void:
@@ -211,11 +188,11 @@ func on_hit(_hurtbox: Hurtbox) -> void:
 	if Input.is_action_pressed("bounce"):
 		if (state_machine.current_state == dashing_state
 		and abs(velocity.x) > wavedash_threshold):
-			shake(48.0, 2.0, 0.25)
+			shake(64.0, 3.0, 0.35)
 			wavedash_particle.restart()
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
-	shake(24.0, 1.5, 0.1)
+	shake(48.0, 2, 0.1)
 	Hitstop.hitstop()
 
 
