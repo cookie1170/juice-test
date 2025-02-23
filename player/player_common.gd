@@ -58,6 +58,7 @@ extends CharacterBody2D
 @onready var acceleration: float = top_speed / acceleration_time
 @onready var deceleration: float = top_speed / deceleration_time
 @onready var dash_vel: float = dash_distance / dash_time
+@onready var bg_highlight_original_color: Color = bg_highlight.modulate
 
 #endregion
 
@@ -180,7 +181,7 @@ func get_hit(hitbox: Hitbox) -> void:
 	Color.CRIMSON, 0.05)
 	hit_flash_tween.tween_property(mesh, "modulate", Color.CRIMSON, 0.05)
 	hit_flash_tween.tween_property(bg_highlight, "modulate",
-	Color.html("82f9ffff"), 0.5).set_delay(0.15)
+	bg_highlight_original_color, 0.5).set_delay(0.15)
 	hit_flash_tween.tween_property(mesh, "modulate",
 	Color.WHITE, 0.5).set_delay(0.15)
 	time_tween.tween_property(Engine, "time_scale", 0.1, 0.1)

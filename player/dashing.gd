@@ -111,7 +111,7 @@ func dash() -> void:
 		zoom_amount, 0.75, 0.2)
 	color_tween.tween_property(owner.mesh, "modulate", Color.WHITE, 0.5)
 	color_tween.tween_property(owner.bg_highlight, "modulate",
-	Color.html("82f9ffff"), 0.5)
+	owner.bg_highlight_original_color, 0.5)
 	color_tween.tween_property(owner.trail, "default_color", Color.WHITE, 0.5)
 	scale_tween.tween_property(owner.mesh, "scale", Vector2(1.0, 1.0), 0.5)
 	clones_spawned = 0

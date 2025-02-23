@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://dibgxoda3g6fg"]
+
+[ext_resource type="Shader" uid="uid://dh2hdtvmgkscm" path="res://common/outline.gdshader" id="1_5u3qx"]
+
+[sub_resource type="Gradient" id="Gradient_xdh4e"]
+colors = PackedColorArray(0.509804, 0.976471, 1, 1, 0, 0.980081, 0.51021, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c7dyn"]
+gradient = SubResource("Gradient_xdh4e")
+width = 256
+height = 256
+fill_to = Vector2(1, 1)
+
+[resource]
+shader = ExtResource("1_5u3qx")
+shader_parameter/gradient = SubResource("GradientTexture2D_c7dyn")
+shader_parameter/width = 8.0
+shader_parameter/pattern = 0
+shader_parameter/inside = true
+shader_parameter/add_margins = false
