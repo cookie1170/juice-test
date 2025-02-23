@@ -4,6 +4,10 @@ extends State
 @export var clone_amount: int = 2
 @export_range(0.0, 512.0, 1.0, "or_greater") var vignette_dist: float = 100.0
 @export_range(0.0, 1.5, 0.05, "or_greater") var zoom_amount: float = 1.1
+@export_range(0.0, 1.0, 0.05, "or_greater") var shockwave_force: float
+@export_range(0.0, 1.0, 0.05, "or_greater") var shockwave_size: float
+@export_range(0.0, 1.0, 0.05, "or_greater") var shockwave_time: float
+@export_range(0.0, 1.0, 0.05, "or_greater") var shockwave_thickness: float
 @export_color_no_alpha var dash_color: Color
 @export_group("Nodes")
 @export var grounded_state: State
@@ -63,12 +67,14 @@ func _physics_process(delta: float) -> void:
 		dash()
 	if owner.is_on_floor():
 		if Input.is_action_pressed("bounce"):
-			if abs(owner.velocity.x) > 512.0:
+			if abs(owner.velocity.x) > owner.wavedash_threshold:
 				wavedash_particle.restart()
 				owner.shake(48.0, 2.0, 0.25)
 				Hitstop.hitstop(0.15)
+				clones_spawned -= 2
 			state_changed.emit(bouncing_state)
 		else:
+			clone_timer.stop()
 			state_changed.emit(grounded_state)
 
 
@@ -96,6 +102,8 @@ func dash() -> void:
 	color_tween = get_tree().create_tween().set_parallel()
 	color_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	Vignette.fade_vignette(vignette_dist, 0.25, 0)
+	Shockwave.shockwave(shockwave_force, shockwave_size,
+	shockwave_time, shockwave_thickness)
 	Hitstop.hitstop(0.05)
 	owner.mesh.scale.x = 2.0
 	owner.mesh.scale.y = 0.5

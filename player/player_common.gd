@@ -13,6 +13,7 @@ extends CharacterBody2D
 @export_group("Dashing")
 @export_range(0.0, 1024.0, 0.5, "or_greater", "suffix:px") var dash_distance: float
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var dash_time: float
+@export_range(0.0, 1024.0, 1.0, "or_greater", "suffix:px/s") var wavedash_threshold: float
 @export_group("Rolling")
 @export_range(0.0, 1024.0, 0.5, "or_greater", "suffix:px/s") var top_speed: float = 320.0
 @export_range(0.0, 1.0, 0.05, "or_greater", "suffix:s") var acceleration_time: float = 0.15
@@ -102,7 +103,10 @@ func apply_gravity(delta_time: float, gravity: float) -> void:
 
 
 func handle_movement(delta_time: float) -> void:
-	Vignette.pos = phantom_camera.to_local(mesh.global_position)
+	var pos_to_cam: Vector2 = phantom_camera.to_local(mesh.global_position) \
+	* phantom_camera.get_zoom()
+	Vignette.pos = pos_to_cam
+	Shockwave.pos = pos_to_cam
 	if state_machine.current_state == dashing_state:
 		move_direction = signf(velocity.x)
 		return
@@ -206,7 +210,7 @@ func get_hit(hitbox: Hitbox) -> void:
 func on_hit(_hurtbox: Hurtbox) -> void:
 	if Input.is_action_pressed("bounce"):
 		if (state_machine.current_state == dashing_state
-		and abs(velocity.x) > 512.0):
+		and abs(velocity.x) > wavedash_threshold):
 			shake(48.0, 2.0, 0.25)
 			wavedash_particle.restart()
 		state_machine.change_state(bouncing_state)
