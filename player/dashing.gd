@@ -4,13 +4,16 @@ extends State
 @export var clone_amount: int = 2
 @export_range(0.0, 512.0, 1.0, "or_greater") var vignette_dist: float = 100.0
 @export_range(0.0, 1.5, 0.05, "or_greater") var zoom_amount: float = 1.1
+@export_color_no_alpha var dash_color: Color
 @export_group("Nodes")
 @export var grounded_state: State
 @export var falling_state: State
+@export var bouncing_state: State
 @export var clone_timer: Timer
 @export var dash_indicator: Line2D
 @export var dash_particles_1: GPUParticles2D
 @export var dash_particles_2: GPUParticles2D
+@export var wavedash_particle: GPUParticles2D
 @export var clone_scene: PackedScene
 
 var vel_tween: Tween
@@ -59,7 +62,14 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_released("dash"):
 		dash()
 	if owner.is_on_floor():
-		state_changed.emit(grounded_state)
+		if Input.is_action_pressed("bounce"):
+			if abs(owner.velocity.x) > 512.0:
+				wavedash_particle.restart()
+				owner.shake(48.0, 2.0, 0.25)
+				Hitstop.hitstop(0.15)
+			state_changed.emit(bouncing_state)
+		else:
+			state_changed.emit(grounded_state)
 
 
 func dash() -> void:
@@ -89,9 +99,9 @@ func dash() -> void:
 	Hitstop.hitstop(0.05)
 	owner.mesh.scale.x = 2.0
 	owner.mesh.scale.y = 0.5
-	owner.mesh.modulate = Color.CRIMSON
-	owner.trail.default_color = Color.CRIMSON
-	owner.bg_highlight.modulate = Color.CRIMSON
+	owner.mesh.modulate = dash_color
+	owner.trail.default_color = dash_color
+	owner.bg_highlight.modulate = dash_color
 	owner.mesh.rotation = owner.velocity.angle()
 	zoom_tween.tween_method(func(value: float):
 		owner.phantom_camera.set_zoom(Vector2(value, value)),
@@ -120,11 +130,7 @@ func dash() -> void:
 	vel_tween.tween_callback(func(): state_changed.emit(
 		grounded_state if owner.is_on_floor() else falling_state
 	))
-	owner.phantom_camera.noise.amplitude = 32.0
-	owner.phantom_camera.noise.frequency = 1.5
-	owner.phantom_camera.noise.positional_noise = true
-	await get_tree().create_timer(0.1).timeout
-	owner.phantom_camera.noise.positional_noise = false
+	owner.shake(32.0, 1.5, 0.1)
 
 
 func get_dash_vel_mult() -> float:

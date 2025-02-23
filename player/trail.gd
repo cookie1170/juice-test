@@ -6,7 +6,7 @@ extends Line2D
 var point_amount: int
 
 func _timeout() -> void:
-	if point_amount >= points.size():
+	if point_amount > points.size():
 		add_point(owner.global_position - Vector2(0.0, 24.0))
-	else:
+	elif points.size() > 0:
 		remove_point(0)

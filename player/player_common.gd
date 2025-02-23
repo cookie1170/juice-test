@@ -36,6 +36,7 @@ extends CharacterBody2D
 @export var dash_particles: GPUParticles2D
 @export var hurt_particles_1: GPUParticles2D
 @export var hurt_particles_2: GPUParticles2D
+@export var wavedash_particle: GPUParticles2D
 @export var trail: Line2D
 @export var bg_highlight: TileMapLayer
 @export var dash_hitbox: Hitbox
@@ -94,7 +95,8 @@ func _physics_process(delta: float) -> void:
 #region handlers
 
 func apply_gravity(delta_time: float, gravity: float) -> void:
-	velocity.y -= gravity * (bounce_peak_y_mult if not hang_timer.is_stopped() else 1.0) * delta_time
+	velocity.y -= gravity * (bounce_peak_y_mult if not hang_timer.is_stopped()
+	else 1.0) * delta_time
 	velocity.y = clampf(velocity.y, -INF, terminal_velocity)
 
 
@@ -137,12 +139,14 @@ func handle_cam_offset() -> void:
 		final_offset.y = offset_amount.y
 	else:
 		final_offset.y = 0.0
-	cam_offset_tween.tween_method(phantom_camera.set_follow_offset, \
+	cam_offset_tween.tween_method(phantom_camera.set_follow_offset,
 	phantom_camera.get_follow_offset(), final_offset, offset_time)
 
 
 func handle_dash_attack() -> void:
 	if state_machine.current_state == grounded_state:
+		dash_attack_timer.stop()
+	if velocity.length_squared() < 262144.0: # 512 squared
 		dash_attack_timer.stop()
 	dash_particles.emitting = not dash_attack_timer.is_stopped()
 	dash_hitbox.monitorable = not dash_attack_timer.is_stopped()
@@ -183,9 +187,7 @@ func get_hit(hitbox: Hitbox) -> void:
 	time_tween.tween_property(Engine, "time_scale", 1.0, 0.75)
 	hurt_particles_1.rotation = hit_angle
 	hurt_particles_2.rotation = hit_angle
-	phantom_camera.noise.amplitude = 96.0
-	phantom_camera.noise.frequency = 3.0
-	phantom_camera.noise.positional_noise = true
+	shake(96.0, 3.0, 0.35)
 	zoom_tween = get_tree().create_tween().set_ignore_time_scale()
 	zoom_tween.tween_method(func(value: float):
 		phantom_camera.set_zoom(Vector2(value, value)),
@@ -197,21 +199,28 @@ func get_hit(hitbox: Hitbox) -> void:
 	hurt_particles_1.restart()
 	hurt_particles_2.restart()
 	await get_tree().create_timer(0.2, true, false, true).timeout
-	phantom_camera.noise.positional_noise = false
 	Vignette.fade_vignette(128.0, 0.35, 0)
 
 
 func on_hit(_hurtbox: Hurtbox) -> void:
 	if Input.is_action_pressed("bounce"):
+		if (state_machine.current_state == dashing_state
+		and abs(velocity.x) > 512.0):
+			shake(48.0, 2.0, 0.25)
+			wavedash_particle.restart()
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
-	phantom_camera.noise.amplitude = 24.0
-	phantom_camera.noise.frequency = 1.5
-	phantom_camera.noise.positional_noise = true
+	shake(24.0, 1.5, 0.1)
 	Hitstop.hitstop()
-	await get_tree().create_timer(0.1).timeout
-	phantom_camera.noise.positional_noise = false
 
 
 func _on_offset_timeout() -> void:
 	final_offset.x = move_direction * offset_amount.x
+
+
+func shake(ampl: float, freq: float, time: float) -> void:
+	phantom_camera.noise.amplitude = ampl
+	phantom_camera.noise.frequency = freq
+	phantom_camera.noise.positional_noise = true
+	await get_tree().create_timer(time, true, false, true).timeout
+	phantom_camera.noise.positional_noise = false
