@@ -260,7 +260,6 @@ shape = SubResource("WorldBoundaryShape2D_6et1j")
 [node name="BGHighlight" type="Parallax2D" parent="."]
 scroll_scale = Vector2(0.75, 0.75)
 repeat_size = Vector2(1152, 865)
-repeat_times = 3
 metadata/_edit_lock_ = true
 
 [node name="BGHighlight" type="TileMapLayer" parent="BGHighlight"]

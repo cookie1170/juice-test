@@ -6,7 +6,8 @@ uniform vec2 position;
 uniform vec2 size;
 
 void fragment() {
-	COLOR = mix(vignette_color, vec4(0.0), step(distance(UV * size, (position + size / 2.0)), dist) + step(dist, -1));
+	float is_in_circle = step(distance(UV * size, (position + size / 2.0)), dist);
+	COLOR = mix(vignette_color, vec4(0.0), is_in_circle + step(dist, -1));
 }
 
 

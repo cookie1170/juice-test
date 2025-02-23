@@ -1,5 +1,10 @@
 shader_type canvas_item;
 
+/*
+credit to Juulpower
+https://godotshaders.com/shader/2d-outline-inline/
+*/
+
 uniform sampler2D gradient;
 uniform float width : hint_range(0, 10) = 1.0;
 uniform int pattern : hint_range(0, 2) = 0; // diamond, circle, square

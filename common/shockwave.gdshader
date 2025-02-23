@@ -1,5 +1,12 @@
 shader_type canvas_item;
 
+/*
+credit to pekopekorhino at
+https://godotshaders.com/shader/positioned-shockwave/,
+who made this adaptation of a shockwave shader by Nolkaloid
+to work with pixel positions
+*/
+
 uniform vec2 global_position;
 uniform vec2 screen_size;
 uniform float force;

@@ -7,7 +7,6 @@ uniform vec4 burn_edge_color : source_color;
 uniform vec3 tint_color : source_color;
 uniform sampler2D noise_texture;
 
-
 void fragment() {
 	float amount_at_uv = texture(noise_texture, UV).r;
 	float inversed_amount = 1.0 - amount;
