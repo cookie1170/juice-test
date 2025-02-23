@@ -70,7 +70,7 @@ func _physics_process(delta: float) -> void:
 			if abs(owner.velocity.x) > owner.wavedash_threshold:
 				wavedash_particle.restart()
 				owner.shake(48.0, 2.0, 0.25)
-				Hitstop.hitstop(0.15)
+				Hitstop.hitstop(0.2)
 				clones_spawned -= 2
 			state_changed.emit(bouncing_state)
 		else:
