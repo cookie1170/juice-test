@@ -454,6 +454,7 @@ texture = SubResource("GradientTexture2D_e7oew")
 metadata/_edit_lock_ = true
 
 [node name="StateLabel" type="Label" parent="." node_paths=PackedStringArray("state_machine")]
+visible = false
 offset_left = -524.5
 offset_top = -152.0
 offset_right = 524.5
