@@ -224,7 +224,6 @@ position = Vector2(0, -304)
 ignore_rotation = false
 zoom = Vector2(0.75, 0.75)
 process_callback = 0
-limit_bottom = 128
 
 [node name="PhantomCameraHost" type="Node" parent="Camera"]
 process_priority = 300

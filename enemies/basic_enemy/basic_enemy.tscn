@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://517hm5oeryf5"]
+[gd_scene load_steps=31 format=3 uid="uid://517hm5oeryf5"]
 
 [ext_resource type="Script" uid="uid://cbfqmuc1jq41h" path="res://enemies/basic_enemy/basic_enemy.gd" id="1_lbl0g"]
 [ext_resource type="Shader" uid="uid://dw02enehvmrt2" path="res://common/dissolve.gdshader" id="2_m6spd"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="3_eopwh"]
 [ext_resource type="Script" uid="uid://d0dcgwjybsqd6" path="res://common/hitbox.gd" id="4_xuk7h"]
 [ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://common/sprites/circle.svg" id="6_u66kj"]
+[ext_resource type="Script" uid="uid://dnpardyg26nr0" path="res://common/sfx.gd" id="7_hpkks"]
+[ext_resource type="AudioStream" uid="uid://c43c8sw4r2v1i" path="res://enemies/basic_enemy/sound_effects/enemy_hurt.wav" id="8_rutms"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_m6spd"]
 seed = 455
@@ -82,17 +84,25 @@ width = 8
 height = 32
 
 [sub_resource type="Gradient" id="Gradient_avyl3"]
-colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 1, 1, 1, 1)
+colors = PackedColorArray(0.862745, 0.0784314, 0.235294, 1, 0.986274, 0.907843, 0.923529, 1)
 metadata/_snap_enabled = true
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_32hag"]
 gradient = SubResource("Gradient_avyl3")
 
+[sub_resource type="Curve" id="Curve_u66kj"]
+_limits = [0.0, 100.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 100), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_fwb20"]
+curve = SubResource("Curve_u66kj")
+
 [sub_resource type="Curve" id="Curve_harik"]
 _data = [Vector2(1e-05, 0), 0.0, 0.0, 0, 0, Vector2(0.1, 1), 0.0, 0.0, 0, 0, Vector2(0.99999, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CurveTexture" id="CurveTexture_e7oew"]
+[sub_resource type="CurveTexture" id="CurveTexture_wodsf"]
 curve = SubResource("Curve_harik")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_7v5ht"]
@@ -103,14 +113,18 @@ spread = 25.0
 initial_velocity_min = 372.55
 initial_velocity_max = 416.67
 gravity = Vector3(0, 98, 0)
-scale_curve = SubResource("CurveTexture_e7oew")
+damping_min = 11.765
+damping_max = 22.569
+damping_curve = SubResource("CurveTexture_fwb20")
+scale_curve = SubResource("CurveTexture_wodsf")
 color_ramp = SubResource("GradientTexture1D_32hag")
 
-[node name="BasicEnemy" type="CharacterBody2D" node_paths=PackedStringArray("update_timer", "sprite", "hurt_particles1", "hurt_particles2", "hurtbox", "hitbox")]
+[node name="BasicEnemy" type="CharacterBody2D" node_paths=PackedStringArray("update_timer", "sprite", "hurt_sfx", "hurt_particles1", "hurt_particles2", "hurtbox", "hitbox")]
 collision_layer = 0
 script = ExtResource("1_lbl0g")
 update_timer = NodePath("UpdateTimer")
 sprite = NodePath("Sprite")
+hurt_sfx = NodePath("HurtSound")
 hurt_particles1 = NodePath("HurtParticles")
 hurt_particles2 = NodePath("HurtParticles2")
 hurtbox = NodePath("Hurtbox")
@@ -168,6 +182,13 @@ texture = SubResource("GradientTexture2D_svadl")
 one_shot = true
 explosiveness = 0.85
 randomness = 0.5
+trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_7v5ht")
+
+[node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
+volume_db = 3.0
+script = ExtResource("7_hpkks")
+sounds = Array[AudioStream]([ExtResource("8_rutms")])
+metadata/_custom_type_script = "uid://dnpardyg26nr0"
 
 [connection signal="timeout" from="UpdateTimer" to="." method="_on_update"]

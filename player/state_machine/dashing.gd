@@ -67,8 +67,9 @@ func _physics_process(delta: float) -> void:
 		dash()
 	if owner.is_on_floor():
 		if Input.is_action_pressed("bounce"):
-			if abs(owner.velocity.x) > owner.wavedash_threshold:
+			if abs(owner.velocity.x) > owner.wavedash_threshold and has_pressed:
 				wavedash_particle.restart()
+				owner.wavedash_sfx.play_sfx()
 				owner.shake(64.0, 3.0, 0.35)
 				Hitstop.hitstop(0.2)
 				clones_spawned -= 2
@@ -83,6 +84,7 @@ func dash() -> void:
 	direction_to(get_global_mouse_position())
 	owner.velocity = owner.dash_vel * dash_direction * get_dash_vel_mult()
 	owner.trail.point_amount = owner.trail.default_point_amount
+	owner.dash_sfx.play_sfx(1.2, 1.6)
 	dash_particles_2.rotation = dash_direction.angle()
 	dash_particles_1.restart()
 	dash_particles_2.restart()

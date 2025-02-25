@@ -30,15 +30,26 @@ extends CharacterBody2D
 #region nodes
 
 @export_group("Nodes")
+@export_subgroup("Timers")
 @export var hang_timer: Timer
 @export var dash_attack_timer: Timer
-@export var mesh: MeshInstance2D
+
+@export_subgroup("Particles")
 @export var dash_particles: GPUParticles2D
 @export var hurt_particles_1: GPUParticles2D
 @export var hurt_particles_2: GPUParticles2D
 @export var wavedash_particle: GPUParticles2D
+@export_subgroup("Sound Effects")
+@export var wavedash_sfx: FancySFX
+@export var dash_sfx: FancySFX
+@export var slash_sfx: FancySFX
+@export var hurt_sfx: FancySFX
+@export var landing_sfx: FancySFX
+@export_subgroup("Misc")
 @export var trail: Line2D
 @export var bg_highlight: TileMapLayer
+@export var mesh: MeshInstance2D
+@export var phantom_camera: PhantomCamera2D
 @export var dash_hitbox: Hitbox
 @export var hurtbox: Hurtbox
 @export var state_machine: StateMachine
@@ -46,7 +57,6 @@ extends CharacterBody2D
 @export var falling_state: State
 @export var dashing_state: State
 @export var grounded_state: State
-@export var phantom_camera: PhantomCamera2D
 
 #endregion
 
@@ -147,6 +157,7 @@ func get_hit(hitbox: Hitbox) -> void:
 	var hit_angle: float = hit_direction.angle()
 	velocity = hit_direction * 1024
 	state_machine.change_state(bouncing_state)
+	hurt_sfx.play_sfx()
 	if hit_flash_tween:
 		hit_flash_tween.kill()
 	if dashing_state.color_tween:
@@ -189,9 +200,12 @@ func on_hit(_hurtbox: Hurtbox) -> void:
 		if (state_machine.current_state == dashing_state
 		and abs(velocity.x) > wavedash_threshold):
 			shake(64.0, 3.0, 0.35)
+			wavedash_sfx.play_sfx()
 			wavedash_particle.restart()
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
+	if velocity.length_squared() > 1638400.0: # 1280 squared
+		slash_sfx.play_sfx()
 	shake(48.0, 2, 0.1)
 	Hitstop.hitstop()
 

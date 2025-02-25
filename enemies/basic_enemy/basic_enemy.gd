@@ -8,6 +8,7 @@ extends CharacterBody2D
 @export_group("Nodes")
 @export var update_timer: Timer
 @export var sprite: Sprite2D
+@export var hurt_sfx: FancySFX
 @export var hurt_particles1: GPUParticles2D
 @export var hurt_particles2: GPUParticles2D
 @export var hurtbox: Hurtbox
@@ -26,6 +27,7 @@ func _physics_process(_delta: float) -> void:
 func get_hit(attack_hitbox: Hitbox):
 	hurtbox.monitoring = false
 	hitbox.monitorable = false
+	hurt_sfx.play_sfx()
 	var hit_angle: float = (
 			attack_hitbox.owner.velocity.angle() if attack_hitbox.owner is CharacterBody2D
 			else -global_position.direction_to(attack_hitbox.global_positon).angle()

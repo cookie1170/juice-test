@@ -1,8 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://2662pyalpsi2"]
+[gd_scene load_steps=8 format=3 uid="uid://2662pyalpsi2"]
 
 [ext_resource type="Shader" uid="uid://7wfo22armo3t" path="res://global/vignette.gdshader" id="1_i55d4"]
 [ext_resource type="Script" uid="uid://dlvoefy3vhhvw" path="res://global/vignette_global.gd" id="1_qdghn"]
 [ext_resource type="Script" uid="uid://5j5liywl4r32" path="res://global/vignette.gd" id="3_0wke6"]
+[ext_resource type="Script" uid="uid://dnpardyg26nr0" path="res://common/sfx.gd" id="4_1takt"]
+[ext_resource type="AudioStream" uid="uid://cxlugf7wrsfqa" path="res://common/sounds/vignette_in.wav" id="5_3cwh3"]
+[ext_resource type="AudioStream" uid="uid://cp5n1btd5k3ft" path="res://common/sounds/vignette_out.wav" id="6_6oig5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jw1n3"]
 shader = ExtResource("1_i55d4")
@@ -14,7 +17,7 @@ shader_parameter/size = Vector2(1152, 648)
 [node name="Vignette" type="CanvasLayer"]
 script = ExtResource("1_qdghn")
 
-[node name="Vignette" type="ColorRect" parent="."]
+[node name="Vignette" type="ColorRect" parent="." node_paths=PackedStringArray("fade_in", "fade_out")]
 material = SubResource("ShaderMaterial_jw1n3")
 anchors_preset = 15
 anchor_right = 1.0
@@ -23,3 +26,17 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("3_0wke6")
+fade_in = NodePath("../FadeIn")
+fade_out = NodePath("../FadeOut")
+
+[node name="FadeIn" type="AudioStreamPlayer2D" parent="."]
+volume_db = 4.0
+script = ExtResource("4_1takt")
+sounds = Array[AudioStream]([ExtResource("5_3cwh3")])
+metadata/_custom_type_script = "uid://dnpardyg26nr0"
+
+[node name="FadeOut" type="AudioStreamPlayer2D" parent="."]
+volume_db = 4.0
+script = ExtResource("4_1takt")
+sounds = Array[AudioStream]([ExtResource("6_6oig5")])
+metadata/_custom_type_script = "uid://dnpardyg26nr0"
