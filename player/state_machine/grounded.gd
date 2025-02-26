@@ -5,6 +5,7 @@ extends State
 
 var point_amt_tween: Tween
 
+
 func enter(_previous_state: State = null) -> void:
 	super()
 	if point_amt_tween:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=71 format=3 uid="uid://lj17m112ehpt"]
+[gd_scene load_steps=70 format=3 uid="uid://lj17m112ehpt"]
 
 [ext_resource type="Script" uid="uid://c08p2djcihe2o" path="res://player/player_common.gd" id="1_4flbx"]
 [ext_resource type="Script" uid="uid://ck2pawb0jmb51" path="res://player/dash_dir_indicator.gd" id="2_8t03j"]
@@ -12,12 +12,11 @@
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="8_rgyib"]
 [ext_resource type="PackedScene" uid="uid://c3m2m678oe1bj" path="res://player/misc/ghost_clone.tscn" id="9_yllr7"]
 [ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://common/sprites/circle.svg" id="11_2ieo8"]
-[ext_resource type="AudioStream" uid="uid://cinaatksd3xc0" path="res://player/sound_effects/ding.wav" id="14_32hag"]
 [ext_resource type="Texture2D" uid="uid://w3fx0ky4iuet" path="res://common/sprites/circle_higher_res.svg" id="14_wodsf"]
 [ext_resource type="Script" uid="uid://dnpardyg26nr0" path="res://common/sfx.gd" id="15_32hag"]
+[ext_resource type="AudioStream" uid="uid://b2a2ksf4cnqwl" path="res://player/sound_effects/ding.ogg" id="15_s7qer"]
 [ext_resource type="AudioStream" uid="uid://thpoed1x7q53" path="res://player/sound_effects/dash_1.wav" id="16_tqiix"]
 [ext_resource type="AudioStream" uid="uid://dkjfqhh87gse1" path="res://player/sound_effects/dash_2.wav" id="17_e7oew"]
-[ext_resource type="AudioStream" uid="uid://iwy8d3pivmor" path="res://player/sound_effects/slash.wav" id="18_e7oew"]
 [ext_resource type="AudioStream" uid="uid://du6fvhi7tx3u5" path="res://player/sound_effects/player_hurt.wav" id="19_c35mf"]
 [ext_resource type="AudioStream" uid="uid://dghcgarnnkhag" path="res://player/sound_effects/landing_1.ogg" id="20_g4c7l"]
 [ext_resource type="AudioStream" uid="uid://bpsba0wfxswfp" path="res://player/sound_effects/landing_2.ogg" id="21_knn7v"]
@@ -264,7 +263,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(0.5, 0)
 
-[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "dash_attack_timer", "dash_particles", "hurt_particles_1", "hurt_particles_2", "wavedash_particle", "wavedash_sfx", "dash_sfx", "slash_sfx", "hurt_sfx", "landing_sfx", "trail", "mesh", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("hang_timer", "dash_attack_timer", "vignette_timer", "dash_particles", "hurt_particles_1", "hurt_particles_2", "wavedash_particle", "wavedash_sfx", "dash_sfx", "hurt_sfx", "landing_sfx", "trail", "mesh", "dash_hitbox", "hurtbox", "state_machine", "bouncing_state", "falling_state", "dashing_state", "grounded_state")]
 physics_interpolation_mode = 1
 script = ExtResource("1_4flbx")
 peak_time = 0.45
@@ -281,13 +280,13 @@ zoom_amount_on_hit = 1.0
 offset_amount = Vector2(384, 256)
 hang_timer = NodePath("HangTimer")
 dash_attack_timer = NodePath("DashAttackTimer")
+vignette_timer = NodePath("VignetteTimer")
 dash_particles = NodePath("DashParticles")
 hurt_particles_1 = NodePath("HurtParticles")
 hurt_particles_2 = NodePath("HurtParticles2")
 wavedash_particle = NodePath("WaveDashParticle")
 wavedash_sfx = NodePath("WavedashSound")
 dash_sfx = NodePath("DashSound")
-slash_sfx = NodePath("SlashSound")
 hurt_sfx = NodePath("HurtSound")
 landing_sfx = NodePath("LandingSound")
 trail = NodePath("Trail")
@@ -317,6 +316,11 @@ one_shot = true
 [node name="DashAttackTimer" type="Timer" parent="."]
 unique_name_in_owner = true
 one_shot = true
+
+[node name="VignetteTimer" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
+ignore_time_scale = true
 
 [node name="DashDirIndicator" type="Line2D" parent="." node_paths=PackedStringArray("mesh")]
 show_behind_parent = true
@@ -495,33 +499,29 @@ color = Color(1, 0.69, 0.38, 1)
 texture = SubResource("GradientTexture2D_e7oew")
 metadata/_edit_lock_ = true
 
-[node name="WavedashSound" type="AudioStreamPlayer2D" parent="."]
-volume_db = -3.0
+[node name="WavedashSound" type="AudioStreamPlayer" parent="."]
+volume_db = -15.0
 script = ExtResource("15_32hag")
-sounds = Array[AudioStream]([ExtResource("14_32hag")])
+sounds = Array[AudioStream]([ExtResource("15_s7qer")])
 metadata/_custom_type_script = "uid://dnpardyg26nr0"
 
-[node name="DashSound" type="AudioStreamPlayer2D" parent="."]
+[node name="DashSound" type="AudioStreamPlayer" parent="."]
 volume_db = 4.0
 script = ExtResource("15_32hag")
 sounds = Array[AudioStream]([ExtResource("16_tqiix"), ExtResource("17_e7oew")])
 metadata/_custom_type_script = "uid://dnpardyg26nr0"
 
-[node name="SlashSound" type="AudioStreamPlayer2D" parent="."]
-script = ExtResource("15_32hag")
-sounds = Array[AudioStream]([ExtResource("18_e7oew")])
-metadata/_custom_type_script = "uid://dnpardyg26nr0"
-
-[node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
+[node name="HurtSound" type="AudioStreamPlayer" parent="."]
 volume_db = 2.0
 script = ExtResource("15_32hag")
 sounds = Array[AudioStream]([ExtResource("19_c35mf")])
 metadata/_custom_type_script = "uid://dnpardyg26nr0"
 
-[node name="LandingSound" type="AudioStreamPlayer2D" parent="."]
+[node name="LandingSound" type="AudioStreamPlayer" parent="."]
 script = ExtResource("15_32hag")
 sounds = Array[AudioStream]([ExtResource("20_g4c7l"), ExtResource("21_knn7v"), ExtResource("22_7pqkx"), ExtResource("23_uw77l"), ExtResource("24_rptt4")])
 metadata/_custom_type_script = "uid://dnpardyg26nr0"
 
+[connection signal="timeout" from="VignetteTimer" to="StateMachine/Dashing" method="_on_vignette"]
 [connection signal="timeout" from="Trail/TrailTimer" to="Trail" method="_timeout"]
 [connection signal="timeout" from="StateMachine/Dashing/CloneTimer" to="StateMachine/Dashing" method="clone_spawn"]

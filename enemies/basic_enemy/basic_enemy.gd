@@ -8,7 +8,7 @@ extends CharacterBody2D
 @export_group("Nodes")
 @export var update_timer: Timer
 @export var sprite: Sprite2D
-@export var hurt_sfx: FancySFX
+@export var hurt_sfx: FancySFX2D
 @export var hurt_particles1: GPUParticles2D
 @export var hurt_particles2: GPUParticles2D
 @export var hurtbox: Hurtbox

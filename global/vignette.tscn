@@ -29,14 +29,12 @@ script = ExtResource("3_0wke6")
 fade_in = NodePath("../FadeIn")
 fade_out = NodePath("../FadeOut")
 
-[node name="FadeIn" type="AudioStreamPlayer2D" parent="."]
-volume_db = 4.0
+[node name="FadeIn" type="AudioStreamPlayer" parent="."]
 script = ExtResource("4_1takt")
 sounds = Array[AudioStream]([ExtResource("5_3cwh3")])
 metadata/_custom_type_script = "uid://dnpardyg26nr0"
 
-[node name="FadeOut" type="AudioStreamPlayer2D" parent="."]
-volume_db = 4.0
+[node name="FadeOut" type="AudioStreamPlayer" parent="."]
 script = ExtResource("4_1takt")
 sounds = Array[AudioStream]([ExtResource("6_6oig5")])
 metadata/_custom_type_script = "uid://dnpardyg26nr0"

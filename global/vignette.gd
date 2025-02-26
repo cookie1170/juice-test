@@ -14,14 +14,14 @@ func fade_vignette(dist: float, time: float, type = 1) -> void:
 	material.set_shader_parameter("size", size)
 	if tween:
 		tween.kill()
-	tween = get_tree().create_tween().set_ignore_time_scale()
+	tween = get_tree().create_tween().set_ignore_time_scale().set_parallel()
 	match type:
 		0:
 			tween.tween_method(func(value: float):
 				material.set_shader_parameter("dist", value),
 			material.get_shader_parameter("dist"), get_vignette_max_dist(), time)
-			if not fade_out.playing:
-				fade_out.play_sfx()
+			if not fade_out.playing and not fade_in.playing:
+				tween.tween_callback(fade_out.play_sfx).set_delay(0.05)
 		1:
 			if material.get_shader_parameter("dist") == dist:
 				tween.kill()
@@ -29,7 +29,7 @@ func fade_vignette(dist: float, time: float, type = 1) -> void:
 			tween.tween_method(func(value: float):
 				material.set_shader_parameter("dist", value),
 			get_vignette_max_dist(), dist, time)
-			fade_in.play_sfx()
+			tween.tween_callback(fade_in.play_sfx).set_delay(0.05)
 
 
 func get_vignette_max_dist() -> float:

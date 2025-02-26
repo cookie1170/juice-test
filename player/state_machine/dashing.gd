@@ -40,7 +40,7 @@ func enter(_previous_state: State = null) -> void:
 	has_pressed = false
 	if time_tween:
 		time_tween.kill()
-	Vignette.fade_vignette(vignette_dist, 0.25, 1)
+	owner.vignette_timer.start()
 	time_tween = get_tree().create_tween().set_ignore_time_scale()
 	time_tween.tween_property(Engine, "time_scale", 0.25, 0.25)
 
@@ -103,7 +103,10 @@ func dash() -> void:
 	scale_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	color_tween = get_tree().create_tween().set_parallel()
 	color_tween.set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
-	Vignette.fade_vignette(vignette_dist, 0.25, 0)
+	if not owner.vignette_timer.is_stopped():
+		owner.vignette_timer.stop()
+	else:
+		Vignette.fade_vignette(vignette_dist, 0.25, 0)
 	Shockwave.shockwave(shockwave_force, shockwave_size,
 	shockwave_time, shockwave_thickness)
 	Hitstop.hitstop(0.05)
@@ -161,3 +164,7 @@ func clone_spawn() -> void:
 	clones_spawned += 1
 	if clones_spawned < clone_amount:
 		clone_timer.start()
+
+
+func _on_vignette() -> void:
+	Vignette.fade_vignette(vignette_dist, 0.25, 1)

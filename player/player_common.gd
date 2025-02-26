@@ -33,7 +33,7 @@ extends CharacterBody2D
 @export_subgroup("Timers")
 @export var hang_timer: Timer
 @export var dash_attack_timer: Timer
-
+@export var vignette_timer: Timer
 @export_subgroup("Particles")
 @export var dash_particles: GPUParticles2D
 @export var hurt_particles_1: GPUParticles2D
@@ -42,7 +42,6 @@ extends CharacterBody2D
 @export_subgroup("Sound Effects")
 @export var wavedash_sfx: FancySFX
 @export var dash_sfx: FancySFX
-@export var slash_sfx: FancySFX
 @export var hurt_sfx: FancySFX
 @export var landing_sfx: FancySFX
 @export_subgroup("Misc")
@@ -204,8 +203,6 @@ func on_hit(_hurtbox: Hurtbox) -> void:
 			wavedash_particle.restart()
 		state_machine.change_state(bouncing_state)
 		velocity.y *= 1.25
-	if velocity.length_squared() > 1638400.0: # 1280 squared
-		slash_sfx.play_sfx()
 	shake(48.0, 2, 0.1)
 	Hitstop.hitstop()
 

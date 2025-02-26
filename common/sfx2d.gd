@@ -1,5 +1,5 @@
-extends AudioStreamPlayer
-class_name FancySFX
+extends AudioStreamPlayer2D
+class_name FancySFX2D
 
 @export var sounds: Array[AudioStream]
 

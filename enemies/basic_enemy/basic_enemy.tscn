@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://pt8x4gqtpuhh" path="res://common/hurtbox.gd" id="3_eopwh"]
 [ext_resource type="Script" uid="uid://d0dcgwjybsqd6" path="res://common/hitbox.gd" id="4_xuk7h"]
 [ext_resource type="Texture2D" uid="uid://383qp57aaa1j" path="res://common/sprites/circle.svg" id="6_u66kj"]
-[ext_resource type="Script" uid="uid://dnpardyg26nr0" path="res://common/sfx.gd" id="7_hpkks"]
+[ext_resource type="Script" uid="uid://bwhsyw5qcvf0j" path="res://common/sfx2d.gd" id="7_hpkks"]
 [ext_resource type="AudioStream" uid="uid://c43c8sw4r2v1i" path="res://enemies/basic_enemy/sound_effects/enemy_hurt.wav" id="8_rutms"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_m6spd"]
@@ -186,9 +186,8 @@ trail_enabled = true
 process_material = SubResource("ParticleProcessMaterial_7v5ht")
 
 [node name="HurtSound" type="AudioStreamPlayer2D" parent="."]
-volume_db = 3.0
 script = ExtResource("7_hpkks")
 sounds = Array[AudioStream]([ExtResource("8_rutms")])
-metadata/_custom_type_script = "uid://dnpardyg26nr0"
+metadata/_custom_type_script = "uid://bwhsyw5qcvf0j"
 
 [connection signal="timeout" from="UpdateTimer" to="." method="_on_update"]
